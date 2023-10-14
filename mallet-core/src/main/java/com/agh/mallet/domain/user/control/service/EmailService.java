@@ -2,6 +2,7 @@ package com.agh.mallet.domain.user.control.service;
 
 import com.agh.mallet.infrastructure.exception.ExceptionType;
 import com.agh.mallet.infrastructure.exception.MalletException;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +33,9 @@ public class EmailService {
             helper.setTo(recipient);
             helper.setSubject(subject);
             helper.setFrom(senderEmail);
-            mailSender.send(mimeMessage);
-        } catch (Exception authenticationFailedException) {
+        //todo odkomentowac jak konto bd dziaalc
+            //    mailSender.send(mimeMessage);
+        } catch (MessagingException exception) {
             throw new MalletException(SENDING_EMAIL_ERROR_MSG, ExceptionType.BAD_GATEWAY);
         }
     }

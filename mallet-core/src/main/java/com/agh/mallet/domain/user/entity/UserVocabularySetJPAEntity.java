@@ -1,6 +1,6 @@
 package com.agh.mallet.domain.user.entity;
 
-import com.agh.mallet.domain.set.entity.VocabularySetJPAEntity;
+import com.agh.mallet.domain.vocabularyset.entity.VocabularySetJPAEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,7 +18,7 @@ public class UserVocabularySetJPAEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private PermissionType permissionType;
+    private PermissionType permissionType = PermissionType.READ;
 
     @ManyToOne
     private UserJPAEntity user;

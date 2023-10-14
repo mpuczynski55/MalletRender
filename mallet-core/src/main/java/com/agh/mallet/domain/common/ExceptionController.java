@@ -1,6 +1,6 @@
 package com.agh.mallet.domain.common;
 
-import com.agh.mallet.api.ErrorResponseDTO;
+import com.agh.api.ErrorResponseDTO;
 import com.agh.mallet.infrastructure.exception.MalletException;
 import com.agh.mallet.infrastructure.mapper.ErrorResponseDTOMapper;
 import org.springframework.http.ResponseEntity;

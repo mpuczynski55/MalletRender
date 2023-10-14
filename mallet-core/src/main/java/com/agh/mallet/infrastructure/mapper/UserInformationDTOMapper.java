@@ -1,6 +1,6 @@
 package com.agh.mallet.infrastructure.mapper;
 
-import com.agh.mallet.api.UserInformationDTO;
+import com.agh.api.UserInformationDTO;
 import com.agh.mallet.domain.user.entity.UserJPAEntity;
 
 public class UserInformationDTOMapper {

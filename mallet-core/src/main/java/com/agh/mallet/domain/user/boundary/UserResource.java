@@ -1,31 +1,29 @@
 package com.agh.mallet.domain.user.boundary;
 
-import com.agh.mallet.api.UserInformationDTO;
-import com.agh.mallet.api.UserLogInDTO;
-import com.agh.mallet.api.UserRegistrationDTO;
+import com.agh.api.UserInformationDTO;
+import com.agh.api.UserLogInDTO;
+import com.agh.api.UserRegistrationDTO;
 import com.agh.mallet.domain.user.control.service.ConfirmationTokenService;
 import com.agh.mallet.domain.user.control.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping(path = "user",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+@RestController
+@RequestMapping(path = "user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserResource {
 
     private static final String REGISTRATION_PATH = "/registration";
     private static final String EMAIL_CONFIRMATION_PATH = REGISTRATION_PATH + "/confirm";
-    private static final String LOGIN_PATH = "/logIn";
+    private static final String LOGIN_PATH = "/login";
 
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;

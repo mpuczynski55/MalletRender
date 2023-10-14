@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "USERR")
+@Table(name = "USER_APP")
 public class UserJPAEntity {
 
     @Id
@@ -41,8 +41,7 @@ public class UserJPAEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<UserVocabularySetJPAEntity> vocabularySets = new HashSet<>();
 
-    public UserJPAEntity() {
-    }
+    public UserJPAEntity() {}
 
     public UserJPAEntity(String username, String password, LocalDate registrationDate, String email, Set<UserVocabularySetJPAEntity> vocabularySets) {
         this.username = username;

@@ -17,10 +17,6 @@ import java.util.Set;
 @Table(name = "TERM")
 public class TermJPAEntity {
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<TermJPAEntity> termTranslations = new HashSet<>();
-    @ManyToMany(mappedBy = "termTranslations", fetch = FetchType.EAGER)
-    Set<TermJPAEntity> translationsOfTerm = new HashSet<>();
     @Id
     @GeneratedValue
     private Long id;
@@ -29,22 +25,24 @@ public class TermJPAEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "LANGUAGE", nullable = false)
     private Language language;
-    @Column(name = "GRAMMATICAL_CAT")
+
+    //todo enum
+    @Column(name = "GRAMMATICAL_CATEGORY")
     private String grammaticalCategory;
+
+    @Column(name = "DEFINITION")
+    private String definition;
+
     @Column(name = "TOPIC")
     private String topic;
 
-    public TermJPAEntity() {
-    }
+    @Column(name = "TERM_DICTIONARY")
+    private boolean isTermDictionary;
 
-    public TermJPAEntity(String term, Language language, String grammaticalCategory, String topic, Set<TermJPAEntity> termTranslations, Set<TermJPAEntity> translationsOfTerm) {
-        this.term = term;
-        this.language = language;
-        this.grammaticalCategory = grammaticalCategory;
-        this.topic = topic;
-        this.termTranslations = termTranslations;
-        this.translationsOfTerm = translationsOfTerm;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<TermJPAEntity> translations = new HashSet<>();
+
+    public TermJPAEntity() {}
 
     public TermJPAEntity(String term, Language language, String grammaticalCategory, String topic) {
         this.term = term;
@@ -53,20 +51,12 @@ public class TermJPAEntity {
         this.topic = topic;
     }
 
-    public TermJPAEntity(String term, Language language, String grammaticalCategory, String topic, Set<TermJPAEntity> termTranslations) {
+    public TermJPAEntity(String term, Language language, String grammaticalCategory, String topic, Set<TermJPAEntity> translations) {
         this.term = term;
         this.language = language;
         this.grammaticalCategory = grammaticalCategory;
         this.topic = topic;
-        this.termTranslations = termTranslations;
-    }
-
-    public TermJPAEntity(String term, Language language, String grammaticalCategory, Set<TermJPAEntity> translationsOfTerm, String topic) {
-        this.term = term;
-        this.language = language;
-        this.grammaticalCategory = grammaticalCategory;
-        this.topic = topic;
-        this.translationsOfTerm = translationsOfTerm;
+        this.translations = translations;
     }
 
     public void setId(Long id) {
@@ -89,11 +79,35 @@ public class TermJPAEntity {
         this.topic = topic;
     }
 
-    public void setTermTranslations(Set<TermJPAEntity> termTranslations) {
-        this.termTranslations = termTranslations;
+    public Long getId() {
+        return id;
     }
 
-    public void setTranslationsOfTerm(Set<TermJPAEntity> translationsOfTerm) {
-        this.translationsOfTerm = translationsOfTerm;
+    public String getTerm() {
+        return term;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public String getGrammaticalCategory() {
+        return grammaticalCategory;
+    }
+
+    public String getDefinition() {
+        return definition;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public boolean isTermDictionary() {
+        return isTermDictionary;
+    }
+
+    public Set<TermJPAEntity> getTranslations() {
+        return translations;
     }
 }

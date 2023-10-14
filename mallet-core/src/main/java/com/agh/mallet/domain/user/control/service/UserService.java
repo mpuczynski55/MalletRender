@@ -1,10 +1,10 @@
 package com.agh.mallet.domain.user.control.service;
 
-import com.agh.mallet.api.UserInformationDTO;
-import com.agh.mallet.api.UserLogInDTO;
-import com.agh.mallet.api.UserRegistrationDTO;
+import com.agh.api.UserInformationDTO;
+import com.agh.api.UserLogInDTO;
+import com.agh.api.UserRegistrationDTO;
 import com.agh.mallet.domain.user.control.exception.MalletUserException;
-import com.agh.mallet.domain.user.control.repo.UserRepository;
+import com.agh.mallet.domain.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.control.utils.EmailTemplateProvider;
 import com.agh.mallet.domain.user.control.utils.UserValidator;
 import com.agh.mallet.domain.user.entity.ConfirmationTokenJPAEntity;

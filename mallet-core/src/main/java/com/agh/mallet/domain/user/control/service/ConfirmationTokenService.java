@@ -1,8 +1,8 @@
 package com.agh.mallet.domain.user.control.service;
 
 import com.agh.mallet.domain.user.control.exception.MalletTokenException;
-import com.agh.mallet.domain.user.control.repo.ConfirmationTokenRepository;
-import com.agh.mallet.domain.user.control.repo.UserRepository;
+import com.agh.mallet.domain.user.control.repository.ConfirmationTokenRepository;
+import com.agh.mallet.domain.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.entity.ConfirmationTokenJPAEntity;
 import com.agh.mallet.domain.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.exception.ExceptionType;

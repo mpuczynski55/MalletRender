@@ -1,8 +1,9 @@
-package com.agh.mallet.domain.set.entity;
+package com.agh.mallet.domain.vocabularyset.entity;
 
 import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -24,7 +25,7 @@ public class VocabularySetJPAEntity {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<TermJPAEntity> terms;
 
     public VocabularySetJPAEntity() {
@@ -36,4 +37,19 @@ public class VocabularySetJPAEntity {
         this.terms = terms;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<TermJPAEntity> getTerms() {
+        return terms;
+    }
 }

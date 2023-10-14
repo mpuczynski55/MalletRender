@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.control.repo;
+package com.agh.mallet.domain.user.control.repository;
 
 import com.agh.mallet.domain.user.entity.ConfirmationTokenJPAEntity;
 import org.springframework.data.repository.CrudRepository;
