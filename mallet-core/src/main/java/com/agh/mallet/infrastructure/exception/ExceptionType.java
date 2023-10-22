@@ -6,6 +6,8 @@ public enum ExceptionType {
     LOCKED,
     INVALID_ARGUMENT,
     ALREADY_EXISTS,
-    BAD_GATEWAY
+    BAD_GATEWAY,
+    CONFLICT,
+    FORBIDDEN
 
 }

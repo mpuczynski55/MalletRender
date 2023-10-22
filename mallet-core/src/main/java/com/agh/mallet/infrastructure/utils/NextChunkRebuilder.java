@@ -1,7 +1,14 @@
 package com.agh.mallet.infrastructure.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
+import java.util.Collection;
+
+@Component
+@RequestScope
 public class NextChunkRebuilder {
 
     private static final String START_POSITION_PARAM_TEMPLATE = "startPosition=%d";
@@ -9,15 +16,28 @@ public class NextChunkRebuilder {
     private static final String AMPERSAND_CHARACTER = "&";
     private static final String QUESTION_MARK = "?";
 
-    private NextChunkRebuilder() {}
+    private final HttpServletRequest servletRequest;
 
-    public static String rebuild(Integer startPosition,
-                                 Integer limit,
-                                 HttpServletRequest request) {
+    public NextChunkRebuilder(HttpServletRequest servletRequest) {
+        this.servletRequest = servletRequest;
+    }
+
+    public <T> String rebuild(Collection<T> resultResource,
+                              Integer startPosition,
+                              Integer limit) {
+        if (resultResource.isEmpty()) {
+            return StringUtils.EMPTY;
+        }
+
+        return rebuild(startPosition, limit);
+    }
+
+    private String rebuild(Integer startPosition,
+                          Integer limit) {
         String currentStartPositionTemplate = String.format(START_POSITION_PARAM_TEMPLATE, startPosition);
         String nextChunkStartPositionTemplate = String.format(START_POSITION_PARAM_TEMPLATE, startPosition + limit);
 
-        String currentUrl = request.getRequestURL().toString();
+        String currentUrl = servletRequest.getRequestURI();
 
         String rebuildNextChunkUri = currentUrl
                 .replace(currentStartPositionTemplate, nextChunkStartPositionTemplate);
@@ -27,6 +47,7 @@ public class NextChunkRebuilder {
 
             rebuildNextChunkUri = currentUrl + QUESTION_MARK + limitTemplate + AMPERSAND_CHARACTER + nextChunkStartPositionTemplate;
         }
+
         return rebuildNextChunkUri;
     }
 

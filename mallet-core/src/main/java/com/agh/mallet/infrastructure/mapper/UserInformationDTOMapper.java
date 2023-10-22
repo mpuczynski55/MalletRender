@@ -1,16 +1,17 @@
 package com.agh.mallet.infrastructure.mapper;
 
-import com.agh.api.UserInformationDTO;
-import com.agh.mallet.domain.user.entity.UserJPAEntity;
+import com.agh.api.UserDetailDTO;
+import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 
 public class UserInformationDTOMapper {
 
     private UserInformationDTOMapper() {
     }
 
-    public static UserInformationDTO from(UserJPAEntity user) {
-        return UserInformationDTO.builder()
+    public static UserDetailDTO from(UserJPAEntity user) {
+        return UserDetailDTO.builder()
                 .id(user.getId())
+                .identifier(user.getIdentifier())
                 .username(user.getUsername())
                 .registrationDate(user.getRegistrationDate())
                 .email(user.getEmail())

@@ -16,6 +16,8 @@ public class MalletException extends RuntimeException {
             case INVALID_ARGUMENT -> onInvalid();
             case ALREADY_EXISTS -> onAlreadyExists();
             case BAD_GATEWAY -> onBadGateway();
+            case CONFLICT -> onConflict();
+            case FORBIDDEN -> onForbidden();
             default -> onUnknown();
         }
     }
@@ -45,11 +47,20 @@ public class MalletException extends RuntimeException {
         this.httpStatus = HttpStatus.BAD_GATEWAY;
     }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    private void onConflict() {
+        this.httpStatus = HttpStatus.CONFLICT;
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    private void onForbidden() {
+        this.httpStatus = HttpStatus.FORBIDDEN;
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     private void onUnknown() {
         this.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     }
-
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
