@@ -84,7 +84,7 @@ public class UserService  {
 
         UserJPAEntity userEntity = getByEmail(email);
 
-        userValidator.validateUserLogIn(userEntity, userEntity.getPassword());
+        userValidator.validateUserLogIn(userEntity, userInfo.password());
 
         return UserInformationDTOMapper.from(userEntity);
     }

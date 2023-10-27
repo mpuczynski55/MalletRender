@@ -1,66 +1,97 @@
 package com.agh.mallet.domain.user.group.control;
 
 import com.agh.api.ContributionDTO;
+import com.agh.api.GroupContributionDeleteDTO;
+import com.agh.api.GroupCreateDTO;
 import com.agh.api.GroupDTO;
+import com.agh.api.GroupUpdateAdminDTO;
+import com.agh.api.GroupUpdateDTO;
 import com.agh.mallet.domain.user.group.entity.ContributionJPAEntity;
 import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
 import com.agh.mallet.domain.user.group.entity.PermissionType;
 import com.agh.mallet.domain.user.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
-import com.agh.mallet.infrastructure.exception.MalletForbiddenException;
 import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
+import com.agh.mallet.infrastructure.mapper.GroupDTOMapper;
 import com.agh.mallet.infrastructure.mapper.PermissionTypeMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
 
-    public static final String INSUFFICIENT_PERMISSION_ERROR_MSG = "User has insufficient permission to edit group";
-    public static final String GROUP_NOT_FOUND_ERROR_MSG = "Group with id: {0} was not found";
+    private static final String INSUFFICIENT_PERMISSION_PREFIX_MSG = "Insufficient permission to ";
+    private static final String PERMISSION_EDIT_GROUP_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "edit group";
+    private static final String PERMISSION_REMOVE_GROUP_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "remove group";
+    private static final String PERMISSION_CHANGE_ADMIN_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "change admin";
+    private static final String GROUP_NOT_FOUND_ERROR_MSG = "Group with id: {0} was not found";
+    private static final String NEW_ADMIN_NOT_FOUND_IN_CONTRIBUTORS_EXCEPTION_MSG = "New admin id: {0} was not found in group contributors";
+
     private final UserService userService;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final ObjectIdentifierProvider objectIdentifierProvider;
-    private final ContributionRepository contributionRepository;
+    private final ContributionService contributionService;
 
-    public GroupService(UserService userService, UserRepository userRepository, GroupRepository groupRepository, ObjectIdentifierProvider objectIdentifierProvider, ContributionRepository contributionRepository) {
+    public GroupService(UserService userService, UserRepository userRepository, GroupRepository groupRepository, ObjectIdentifierProvider objectIdentifierProvider, ContributionService contributionService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.objectIdentifierProvider = objectIdentifierProvider;
-        this.contributionRepository = contributionRepository;
+        this.contributionService = contributionService;
     }
 
-    public void create(GroupDTO groupDTO, String creatorEmail) {
+    public GroupDTO get(long id) {
+        GroupJPAEntity groupEntity = getById(id);
+
+        return GroupDTOMapper.from(groupEntity);
+    }
+
+    public void create(GroupCreateDTO groupCreateDTO, String creatorEmail) {
         UserJPAEntity creator = userService.getByEmail(creatorEmail);
-        String groupName = groupDTO.name();
+        String groupName = groupCreateDTO.name();
         String groupIdentifier = objectIdentifierProvider.fromGroupName(groupName);
+        List<ContributionDTO> contributions = groupCreateDTO.contributions();
 
-        List<UserJPAEntity> contributors = getAllUsers(groupDTO);
-        Set<ContributionJPAEntity> contributions = toContributionJPAEntities(groupDTO.contributions(), contributors);
+        List<UserJPAEntity> contributors = userRepository.findAllById(extractCreateContributorIds(contributions));
+        Set<ContributionJPAEntity> contributionEntities = toContributionJPAEntities(contributions, contributors);
+        contributionEntities.add(getCreatorContribution(creator));
 
-        GroupJPAEntity groupEntity = new GroupJPAEntity(groupName, groupIdentifier, contributions, creator);
+        GroupJPAEntity groupEntity = new GroupJPAEntity(groupName, groupIdentifier, contributionEntities, creator);
 
         groupRepository.save(groupEntity);
     }
 
-    private List<UserJPAEntity> getAllUsers(GroupDTO groupDTO) {
-        List<Long> contributorIds = groupDTO.contributions().stream()
-                .map(contribution -> contribution.contributor().id())
-                .toList();
-        return userRepository.findAllById(contributorIds);
+    private Set<Long> extractCreateContributorIds(List<ContributionDTO> contributions) {
+        return contributions.stream()
+                .map(ContributionDTO::contributorId)
+                .collect(Collectors.toSet());
     }
 
-    private Set<ContributionJPAEntity> toContributionJPAEntities(List<ContributionDTO> contributionDTOS, List<UserJPAEntity> contributors) {
+    private List<Long> extractContributorIds(List<ContributionDTO> contributions) {
+        return contributions.stream()
+                .map(ContributionDTO::contributorId)
+                .toList();
+    }
+
+    private ContributionJPAEntity getCreatorContribution(UserJPAEntity creator) {
+        return new ContributionJPAEntity(PermissionType.READ_WRITE, PermissionType.READ_WRITE, creator);
+    }
+
+    private Set<ContributionJPAEntity> toContributionJPAEntities(Collection<ContributionDTO> contributionDTOS, List<UserJPAEntity> contributors) {
         return contributionDTOS.stream()
                 .map(contributionDTO -> toContributionJPAEntity(contributors, contributionDTO))
                 .filter(Optional::isPresent)
@@ -75,50 +106,126 @@ public class GroupService {
 
     private Optional<UserJPAEntity> getMatchingContributor(ContributionDTO contributionDTO, List<UserJPAEntity> contributors) {
         return contributors.stream()
-                .filter(contributor -> contributor.getId().equals(contributionDTO.id()))
+                .filter(contributor -> contributor.getId().equals(contributionDTO.contributorId()))
                 .findFirst();
     }
 
-    public void addContributions(GroupDTO groupDTO, String userEmail) {
-        boolean hasPermissionToEditGroup = hasPermissionToEditGroup(userEmail);
+    public void updateContributions(GroupUpdateDTO groupUpdateDTO, String userEmail) {
+        GroupJPAEntity groupEntity = getById(groupUpdateDTO.id());
 
-        if (hasPermissionToEditGroup) {
-            GroupJPAEntity groupEntity = get(groupDTO.id());
+        UserContributionValidator.validateUserGroupReadWritePermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
 
-            List<UserJPAEntity> users = getAllUsers(groupDTO);
-            Set<ContributionJPAEntity> contributionEntities = toContributionJPAEntities(groupDTO.contributions(), users);
+        List<ContributionDTO> contributions = getContributionsWithoutAdmin(groupUpdateDTO, groupEntity);
+        Set<ContributionDTO> contributionsToCreate = getContributionsToCreate(contributions);
+        Set<ContributionDTO> contributionsToUpdate = getContributionsToUpdate(contributions);
 
-            groupEntity.getContributions().addAll(contributionEntities);
-            groupRepository.save(groupEntity);
-        }
+        List<UserJPAEntity> existingContributors = userRepository.findAllById(extractContributorIds(contributions));
+        Set<ContributionJPAEntity> contributionEntitiesToCreate = toContributionJPAEntities(contributionsToCreate, existingContributors);
 
-        throw new MalletForbiddenException(INSUFFICIENT_PERMISSION_ERROR_MSG);
+        Set<ContributionJPAEntity> existingContributions = groupEntity.getContributions();
+        updateContributions(contributionsToUpdate, existingContributions);
+
+        existingContributions.addAll(contributionEntitiesToCreate);
+
+        groupRepository.save(groupEntity);
     }
 
-    private GroupJPAEntity get(long id) {
+    private List<ContributionDTO> getContributionsWithoutAdmin(GroupUpdateDTO groupUpdateDTO, GroupJPAEntity groupEntity) {
+        return groupUpdateDTO.contributions().stream()
+                .filter(contribution -> !contribution.contributorId().equals(groupEntity.getAdmin().getId()))
+                .toList();
+    }
+
+    private Set<ContributionDTO> getContributionsToCreate(List<ContributionDTO> contributions) {
+        return getContributions(contributions, contribution -> Objects.isNull(contribution.id()));
+    }
+
+    private Set<ContributionDTO> getContributionsToUpdate(List<ContributionDTO> contributions) {
+        return getContributions(contributions, contribution -> !Objects.isNull(contribution.id()));
+    }
+
+    private Set<ContributionDTO> getContributions(List<ContributionDTO> contributions, Predicate<ContributionDTO> contributionFilter) {
+        return contributions.stream()
+                .filter(contributionFilter)
+                .collect(Collectors.toSet());
+    }
+
+    private void updateContributions(Set<ContributionDTO> contributionsToUpdate, Set<ContributionJPAEntity> existingContributions) {
+        Map<Long, ContributionJPAEntity> existingContributionById = existingContributions.stream()
+                .collect(Collectors.toMap(ContributionJPAEntity::getId, Function.identity()));
+
+        contributionsToUpdate.stream()
+                .filter(contributionToUpdate -> existingContributionById.containsKey(contributionToUpdate.id()))
+                .forEach(contributionToUpdate -> rebuildContributionJPAEntity(existingContributionById, contributionToUpdate));
+    }
+
+    private void rebuildContributionJPAEntity(Map<Long, ContributionJPAEntity> existingContributionById, ContributionDTO contributionToUpdate) {
+        ContributionJPAEntity existingContribution = existingContributionById.get(contributionToUpdate.id());
+        PermissionType groupPermissionType = PermissionTypeMapper.from(contributionToUpdate.groupPermissionType());
+        PermissionType setPermissionType = PermissionTypeMapper.from(contributionToUpdate.setPermissionType());
+
+        existingContribution.setGroupPermissionType(groupPermissionType);
+        existingContribution.setSetPermissionType(setPermissionType);
+    }
+
+    private GroupJPAEntity getById(long id) {
         return groupRepository.findById(id)
                 .orElseThrow(supplyGroupNotFoundException(id));
     }
 
-    private boolean hasPermissionToEditGroup(String userEmail) {
-        return contributionRepository.findByContributorEmail(userEmail)
-                .map(ContributionJPAEntity::getGroupPermissionType)
-                .stream()
-                .anyMatch(PermissionType.READ_WRITE::equals);
-    }
-
-    private static Supplier<MalletNotFoundException> supplyGroupNotFoundException(long groupId) {
+    private Supplier<MalletNotFoundException> supplyGroupNotFoundException(long groupId) {
         return () -> {
             String message = MessageFormat.format(GROUP_NOT_FOUND_ERROR_MSG, groupId);
             throw new MalletNotFoundException(message);
         };
     }
 
-    public void delete(GroupDTO groupDTO, String userEmail) {
-        GroupJPAEntity groupEntity = get(groupDTO.id());
+    public void delete(long id, String userEmail) {
+        GroupJPAEntity groupEntity = getById(id);
 
-        UserJPAEntity groupAdmin = groupEntity.getAdmin();
+        UserContributionValidator.validateAdminRole(userEmail, groupEntity.getAdmin(), PERMISSION_REMOVE_GROUP_ERROR_MSG);
 
-
+        groupRepository.delete(groupEntity);
     }
+
+    public void updateAdmin(GroupUpdateAdminDTO groupUpdateAdminDTO, String userEmail) {
+        GroupJPAEntity groupEntity = getById(groupUpdateAdminDTO.groupId());
+
+        UserContributionValidator.validateAdminRole(userEmail, groupEntity.getAdmin(), PERMISSION_CHANGE_ADMIN_ERROR_MSG);
+
+        UserJPAEntity newAdminEntity = getNewAdminEntity(groupUpdateAdminDTO, groupEntity);
+        groupEntity.setAdmin(newAdminEntity);
+
+        groupRepository.save(groupEntity);
+    }
+
+    private UserJPAEntity getNewAdminEntity(GroupUpdateAdminDTO groupUpdateAdminDTO, GroupJPAEntity groupEntity) {
+        return groupEntity.getContributions().stream()
+                .map(ContributionJPAEntity::getContributor)
+                .filter(contributor -> contributor.getId().equals(groupUpdateAdminDTO.newAdminId()))
+                .findFirst()
+                .orElseThrow(supplyNewAdminIdNotFoundInContributors(groupUpdateAdminDTO.newAdminId()));
+    }
+
+
+    private Supplier<MalletNotFoundException> supplyNewAdminIdNotFoundInContributors(long newAdminId) {
+        String message = MessageFormat.format(NEW_ADMIN_NOT_FOUND_IN_CONTRIBUTORS_EXCEPTION_MSG, newAdminId);
+        return () -> new MalletNotFoundException(message);
+    }
+
+    public void deleteContributions(GroupContributionDeleteDTO groupContributionDeleteDTO, String userEmail) {
+        Long groupId = groupContributionDeleteDTO.groupId();
+        GroupJPAEntity groupEntity = getById(groupId);
+
+        UserContributionValidator.validateUserGroupReadWritePermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
+
+        List<ContributionJPAEntity> contributionsToDelete = contributionService.getByIds(groupContributionDeleteDTO.contributionsToDeleteIds());
+        Collection<ContributionJPAEntity> groupContributions = groupEntity.getContributions();
+
+        groupContributions.removeAll(contributionsToDelete);
+
+        groupRepository.save(groupEntity);
+    }
+
+
 }

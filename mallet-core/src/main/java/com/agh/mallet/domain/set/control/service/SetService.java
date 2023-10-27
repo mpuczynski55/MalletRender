@@ -1,14 +1,12 @@
 package com.agh.mallet.domain.set.control.service;
 
 import com.agh.api.SetBasicDTO;
-import com.agh.api.SetBasicInformationDTO;
-import com.agh.api.SetInformationDTO;
-import com.agh.mallet.domain.vocabulary.entity.Language;
-import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
+import com.agh.api.SetDetailDTO;
 import com.agh.mallet.domain.set.control.repository.SetRepository;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
+import com.agh.mallet.domain.vocabulary.entity.Language;
+import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
 import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
-import com.agh.mallet.infrastructure.mapper.SetBasicInformationDTOMapper;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.mapper.SetInformationDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
@@ -32,16 +30,16 @@ public class SetService {
         this.nextChunkRebuilder = nextChunkRebuilder;
     }
 
-    public List<SetBasicInformationDTO> getBasics(Set<Long> ids) {
+    public SetBasicDTO getBasics(Set<Long> ids) {
         List<SetJPAEntity> sets = setRepository.findAllById(ids);
 
-        return SetBasicInformationDTOMapper.from(sets);
+        return SetBasicsDTOMapper.from(sets);
     }
 
-    public SetInformationDTO get(long setId,
-                                 int startPosition,
-                                 int limit,
-                                 String primaryLanguage) {
+    public SetDetailDTO get(long setId,
+                            int startPosition,
+                            int limit,
+                            String primaryLanguage) {
         if (limit > 30) {
             limit = 30;
         }
@@ -56,9 +54,14 @@ public class SetService {
         return SetInformationDTOMapper.from(setId, terms, nextChunkUri);
     }
 
-    public SetBasicDTO getBasics(int startPosition,
+    public SetBasicDTO getBasics(Set<Long> ids,
+                                 int startPosition,
                                  int limit,
                                  String primaryLanguage) {
+        if (!ids.isEmpty()) {
+            return getBasics(ids);
+        }
+
         if (limit > 10) {
             limit = 10;
         }
@@ -75,8 +78,8 @@ public class SetService {
     }
 
     public SetJPAEntity getById(long id) {
-     return setRepository.findById(id)
-             .orElseThrow(supplySetNotFoundException(id));
+        return setRepository.findById(id)
+                .orElseThrow(supplySetNotFoundException(id));
     }
 
     private static Supplier<MalletNotFoundException> supplySetNotFoundException(long setId) {

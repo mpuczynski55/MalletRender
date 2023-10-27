@@ -5,11 +5,13 @@ import lombok.NonNull;
 
 @Builder
 public record ContributionDTO (
+        Long id,
         @NonNull
-        long id,
         PermissionType setPermissionType,
+        @NonNull
         PermissionType groupPermissionType,
-        UserDTO contributor
+        @NonNull
+        Long contributorId
 ){
 
 }

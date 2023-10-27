@@ -6,13 +6,14 @@ import lombok.NonNull;
 import java.util.List;
 
 @Builder
-public record GroupDTO(
+public record SetDetailDTO(
         @NonNull
         Long id,
         @NonNull
         String name,
+        String description,
         @NonNull
-        List<ContributionDTO> contributions
+        List<TermDTO> terms,
+        String nextChunkUri
 ) {
-
 }

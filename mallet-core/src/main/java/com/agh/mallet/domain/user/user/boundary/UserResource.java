@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @Tag(name = "User Resource")
 @RestController
 @RequestMapping(path = "user", produces = MediaType.APPLICATION_JSON_VALUE)

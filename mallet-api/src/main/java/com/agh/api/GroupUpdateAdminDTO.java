@@ -4,12 +4,10 @@ import lombok.Builder;
 import lombok.NonNull;
 
 @Builder
-public record UserDTO(
+public record GroupUpdateAdminDTO(
         @NonNull
-        Long id,
+        Long groupId,
         @NonNull
-        String name,
-        @NonNull
-        String identifier
+        Long newAdminId
 ) {
 }

@@ -1,7 +1,7 @@
 package com.agh.mallet.infrastructure.mapper;
 
 import com.agh.api.UserDTO;
-import com.agh.api.SetBasicInformationDTO;
+import com.agh.api.SetInformationDTO;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 
 import java.util.Collection;
@@ -11,16 +11,16 @@ public class SetBasicInformationDTOMapper {
 
     private SetBasicInformationDTOMapper() {}
 
-    public static List<SetBasicInformationDTO> from(Collection<SetJPAEntity> sets) {
+    public static List<SetInformationDTO> from(Collection<SetJPAEntity> sets) {
         return sets.stream()
                 .map(SetBasicInformationDTOMapper::from)
                 .toList();
     }
 
-    public static SetBasicInformationDTO from(SetJPAEntity set) {
+    public static SetInformationDTO from(SetJPAEntity set) {
         UserDTO creator = UserDTOMapper.from(set.getCreator());
 
-        return SetBasicInformationDTO.builder()
+        return SetInformationDTO.builder()
                 .id(set.getId())
                 .name(set.getName())
                 .creator(creator)

@@ -7,8 +7,7 @@ import org.springframework.http.HttpStatus;
 
 public class ErrorResponseDTOMapper {
 
-    private ErrorResponseDTOMapper() {
-    }
+    private ErrorResponseDTOMapper() {}
 
     public static ErrorResponseDTO from(MalletException malletException) {
         HttpStatus httpStatus = malletException.getHttpStatus();

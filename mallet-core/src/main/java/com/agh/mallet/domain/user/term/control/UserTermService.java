@@ -1,6 +1,5 @@
 package com.agh.mallet.domain.user.term.control;
 
-import com.agh.api.UserKnownTermsUpdateDTO;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.control.utils.UserValidator;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
@@ -9,6 +8,7 @@ import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserTermService {
@@ -23,11 +23,11 @@ public class UserTermService {
         this.userValidator = userValidator;
     }
 
-    public void updateKnown(UserKnownTermsUpdateDTO userKnownTermsUpdateDTO, String userEmail){
+    public void updateKnown(Set<Long> userKnownTermIds, String userEmail){
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
         userValidator.validateActiveness(userEntity);
 
-        List<TermJPAEntity> termsToUpdate = termRepository.findAllById(userKnownTermsUpdateDTO.termIds());
+        List<TermJPAEntity> termsToUpdate = termRepository.findAllById(userKnownTermIds);
 
         userEntity.getKnownTerms().addAll(termsToUpdate);
 

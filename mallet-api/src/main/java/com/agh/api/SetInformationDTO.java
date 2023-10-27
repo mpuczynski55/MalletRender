@@ -3,17 +3,15 @@ package com.agh.api;
 import lombok.Builder;
 import lombok.NonNull;
 
-import java.util.List;
-
 @Builder
-public record SetInformationDTO (
+public record SetInformationDTO(
         @NonNull
-        long id,
+        Long id,
+        @NonNull
         String name,
-        String description,
         @NonNull
-        List<TermDTO> terms,
+        UserDTO creator,
         @NonNull
-        String nextChunkUri
-) {
+        int numberOfTerms,
+        String description) {
 }

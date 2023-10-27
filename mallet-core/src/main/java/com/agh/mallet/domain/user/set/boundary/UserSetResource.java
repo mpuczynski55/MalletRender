@@ -56,11 +56,11 @@ public class UserSetResource {
 
     @Operation(
             summary = "Remove set from user's set collection",
-            description = "Add set to user's set collection providing setId"
+            description = "Remove set from user's set collection providing setId"
     )
     @DeleteMapping
-    public ResponseEntity<Object> remove(Principal principal, @RequestParam long id) {
-        userSetService.remove(id, principal.getName());
+    public ResponseEntity<Object> remove(Principal principal, @RequestParam long setId) {
+        userSetService.remove(setId, principal.getName());
 
         return new ResponseEntity<>( HttpStatus.OK);
     }
