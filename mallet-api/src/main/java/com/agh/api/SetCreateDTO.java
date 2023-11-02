@@ -6,14 +6,13 @@ import lombok.NonNull;
 import java.util.List;
 
 @Builder
-public record SetDetailDTO(
+public record SetCreateDTO(
         @NonNull
-        Long id,
-        @NonNull
-        String name,
+        String topic,
         String description,
         @NonNull
-        List<TermDetailDTO> terms,
-        String nextChunkUri
+        List<Long> existingTermIds,
+        @NonNull
+        List<TermCreateDTO> termsToCreate
 ) {
 }

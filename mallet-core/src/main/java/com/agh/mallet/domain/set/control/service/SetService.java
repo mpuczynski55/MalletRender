@@ -4,8 +4,8 @@ import com.agh.api.SetBasicDTO;
 import com.agh.api.SetDetailDTO;
 import com.agh.mallet.domain.set.control.repository.SetRepository;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
-import com.agh.mallet.domain.vocabulary.entity.Language;
-import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
+import com.agh.mallet.domain.term.entity.Language;
+import com.agh.mallet.domain.term.entity.TermJPAEntity;
 import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.mapper.SetInformationDTOMapper;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -58,7 +59,7 @@ public class SetService {
                                  int startPosition,
                                  int limit,
                                  String primaryLanguage) {
-        if (!ids.isEmpty()) {
+        if (Objects.nonNull(ids)) {
             return getBasics(ids);
         }
 

@@ -1,5 +1,6 @@
 package com.agh.mallet.domain.user.user.control.service;
 
+import com.agh.api.UserDTO;
 import com.agh.api.UserDetailDTO;
 import com.agh.api.UserLogInDTO;
 import com.agh.api.UserRegistrationDTO;
@@ -10,6 +11,7 @@ import com.agh.mallet.domain.user.user.control.utils.UserValidator;
 import com.agh.mallet.domain.user.user.entity.ConfirmationTokenJPAEntity;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.exception.ExceptionType;
+import com.agh.mallet.infrastructure.mapper.UserDTOMapper;
 import com.agh.mallet.infrastructure.mapper.UserInformationDTOMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -101,8 +105,17 @@ public class UserService  {
                 .orElseThrow(throwUserNotFoundException(email));
     }
 
-    public UserJPAEntity save(UserJPAEntity userEntity){
+    public UserJPAEntity save(UserJPAEntity userEntity) {
         return userRepository.save(userEntity);
     }
 
+    public List<UserDTO> get(String username) {
+        if (username.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<UserJPAEntity> users = userRepository.findAllByUsernameStartingWith(username);
+
+        return UserDTOMapper.from(users);
+    }
 }

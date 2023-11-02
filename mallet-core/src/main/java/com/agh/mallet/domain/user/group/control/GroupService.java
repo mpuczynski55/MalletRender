@@ -4,8 +4,17 @@ import com.agh.api.ContributionDTO;
 import com.agh.api.GroupContributionDeleteDTO;
 import com.agh.api.GroupCreateDTO;
 import com.agh.api.GroupDTO;
+import com.agh.api.GroupSetCreateDTO;
+import com.agh.api.GroupSetDTO;
 import com.agh.api.GroupUpdateAdminDTO;
 import com.agh.api.GroupUpdateDTO;
+import com.agh.api.SetCreateDTO;
+import com.agh.api.TermCreateDTO;
+import com.agh.mallet.domain.set.control.service.SetService;
+import com.agh.mallet.domain.set.entity.SetJPAEntity;
+import com.agh.mallet.domain.term.control.repository.TermRepository;
+import com.agh.mallet.domain.term.entity.Language;
+import com.agh.mallet.domain.term.entity.TermJPAEntity;
 import com.agh.mallet.domain.user.group.entity.ContributionJPAEntity;
 import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
 import com.agh.mallet.domain.user.group.entity.PermissionType;
@@ -29,6 +38,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class GroupService {
@@ -37,6 +47,8 @@ public class GroupService {
     private static final String PERMISSION_EDIT_GROUP_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "edit group";
     private static final String PERMISSION_REMOVE_GROUP_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "remove group";
     private static final String PERMISSION_CHANGE_ADMIN_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "change admin";
+    private static final String PERMISSION_ADD_SET_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "add set to group";
+    private static final String PERMISSION_REMOVE_SET_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "remove set from group";
     private static final String GROUP_NOT_FOUND_ERROR_MSG = "Group with id: {0} was not found";
     private static final String NEW_ADMIN_NOT_FOUND_IN_CONTRIBUTORS_EXCEPTION_MSG = "New admin id: {0} was not found in group contributors";
 
@@ -45,13 +57,23 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final ObjectIdentifierProvider objectIdentifierProvider;
     private final ContributionService contributionService;
+    private final SetService setService;
+    private final TermRepository termRepository;
 
-    public GroupService(UserService userService, UserRepository userRepository, GroupRepository groupRepository, ObjectIdentifierProvider objectIdentifierProvider, ContributionService contributionService) {
+    public GroupService(UserService userService,
+                        UserRepository userRepository,
+                        GroupRepository groupRepository,
+                        ObjectIdentifierProvider objectIdentifierProvider,
+                        ContributionService contributionService,
+                        TermRepository termRepository,
+                        SetService setService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.objectIdentifierProvider = objectIdentifierProvider;
         this.contributionService = contributionService;
+        this.termRepository = termRepository;
+        this.setService = setService;
     }
 
     public GroupDTO get(long id) {
@@ -60,7 +82,7 @@ public class GroupService {
         return GroupDTOMapper.from(groupEntity);
     }
 
-    public void create(GroupCreateDTO groupCreateDTO, String creatorEmail) {
+    public Long create(GroupCreateDTO groupCreateDTO, String creatorEmail) {
         UserJPAEntity creator = userService.getByEmail(creatorEmail);
         String groupName = groupCreateDTO.name();
         String groupIdentifier = objectIdentifierProvider.fromGroupName(groupName);
@@ -72,7 +94,9 @@ public class GroupService {
 
         GroupJPAEntity groupEntity = new GroupJPAEntity(groupName, groupIdentifier, contributionEntities, creator);
 
-        groupRepository.save(groupEntity);
+        GroupJPAEntity savedGroup = groupRepository.save(groupEntity);
+
+        return savedGroup.getId();
     }
 
     private Set<Long> extractCreateContributorIds(List<ContributionDTO> contributions) {
@@ -113,7 +137,7 @@ public class GroupService {
     public void updateContributions(GroupUpdateDTO groupUpdateDTO, String userEmail) {
         GroupJPAEntity groupEntity = getById(groupUpdateDTO.id());
 
-        UserContributionValidator.validateUserGroupReadWritePermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
+        UserContributionValidator.validateUserGroupEditPermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
 
         List<ContributionDTO> contributions = getContributionsWithoutAdmin(groupUpdateDTO, groupEntity);
         Set<ContributionDTO> contributionsToCreate = getContributionsToCreate(contributions);
@@ -217,7 +241,7 @@ public class GroupService {
         Long groupId = groupContributionDeleteDTO.groupId();
         GroupJPAEntity groupEntity = getById(groupId);
 
-        UserContributionValidator.validateUserGroupReadWritePermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
+        UserContributionValidator.validateUserGroupEditPermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
 
         List<ContributionJPAEntity> contributionsToDelete = contributionService.getByIds(groupContributionDeleteDTO.contributionsToDeleteIds());
         Collection<ContributionJPAEntity> groupContributions = groupEntity.getContributions();
@@ -227,5 +251,73 @@ public class GroupService {
         groupRepository.save(groupEntity);
     }
 
+
+    public void addSet(GroupSetDTO groupSetDTO, String userEmail) {
+        GroupJPAEntity groupEntity = getById(groupSetDTO.groupId());
+
+        UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_ADD_SET_ERROR_MSG);
+
+        SetJPAEntity setToClone = setService.getById(groupSetDTO.setId());
+        SetJPAEntity clonedSet = new SetJPAEntity(setToClone);
+        groupEntity.addSet(clonedSet);
+
+        groupRepository.save(groupEntity);
+    }
+
+    public void removeSet(GroupSetDTO groupSetDTO, String userEmail) {
+        GroupJPAEntity groupEntity = getById(groupSetDTO.groupId());
+
+        UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_REMOVE_SET_ERROR_MSG);
+
+        SetJPAEntity setToRemove = setService.getById(groupSetDTO.setId());
+        groupEntity.removeSet(setToRemove);
+
+        groupRepository.save(groupEntity);
+    }
+
+    public void createSet(GroupSetCreateDTO groupSetCreateDTO, String userEmail) {
+        GroupJPAEntity groupEntity = getById(groupSetCreateDTO.groupId());
+
+        UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_ADD_SET_ERROR_MSG);
+
+        SetCreateDTO set = groupSetCreateDTO.set();
+        Set<TermJPAEntity> mergedTerms = getToCreateAndExistingTerms(set);
+        SetJPAEntity setJPAEntity = new SetJPAEntity(set.topic(), set.description(), mergedTerms);
+
+        groupEntity.addSet(setJPAEntity);
+
+        groupRepository.save(groupEntity);
+    }
+
+    private Set<TermJPAEntity> getToCreateAndExistingTerms(SetCreateDTO setCreateDTO) {
+        List<TermJPAEntity> existingTerms = termRepository.findAllById(setCreateDTO.existingTermIds());
+        List<TermJPAEntity> termsToCreate = getTermsToCreate(setCreateDTO);
+
+        return Stream.concat(termsToCreate.stream(), existingTerms.stream())
+                .collect(Collectors.toSet());
+    }
+
+    private List<TermJPAEntity> getTermsToCreate(SetCreateDTO setCreateDTO) {
+        return setCreateDTO.termsToCreate().stream()
+                .map(this::toTermJPAEntity)
+                .toList();
+    }
+
+    private TermJPAEntity toTermJPAEntity(TermCreateDTO term) {
+        return new TermJPAEntity(
+                term.term(),
+                Language.from(term.language().name()),
+                term.definition(),
+                toTranslationTermJPAEntity(term)
+        );
+    }
+
+    private TermJPAEntity toTranslationTermJPAEntity(TermCreateDTO term) {
+        return new TermJPAEntity(
+                term.translation().term(),
+                Language.from(term.translation().language().name()),
+                term.translation().definition()
+        );
+    }
 
 }

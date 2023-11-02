@@ -1,5 +1,6 @@
 package com.agh.mallet.domain.user.user.boundary;
 
+import com.agh.api.UserDTO;
 import com.agh.api.UserDetailDTO;
 import com.agh.api.UserLogInDTO;
 import com.agh.api.UserRegistrationDTO;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
+import java.util.List;
 
 @Tag(name = "User Resource")
 @RestController
@@ -68,6 +70,16 @@ public class UserResource {
         UserDetailDTO userDetailDTO = userService.logIn(userLogInDTO);
 
         return new ResponseEntity<>(userDetailDTO, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get users providing username"
+    )
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> get(@RequestParam("username") String username) {
+        List<UserDTO> userDTOS = userService.get(username);
+
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
 }

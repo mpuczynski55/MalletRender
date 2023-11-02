@@ -9,9 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.util.HashSet;
@@ -31,11 +29,11 @@ public class GroupJPAEntity {
     @Column(name = "IDENTIFIER", nullable = false)
     private String identifier;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "GROUP_ID")
     private Set<ContributionJPAEntity> contributions = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "GROUP_ID")
     private Set<SetJPAEntity> sets = new HashSet<>();
 
@@ -107,6 +105,16 @@ public class GroupJPAEntity {
 
     public void setAdmin(UserJPAEntity admin) {
         this.admin = admin;
+    }
+
+    public GroupJPAEntity addSet(SetJPAEntity groupSet) {
+        sets.add(groupSet);
+        return this;
+    }
+
+    public UserJPAEntity removeSet(SetJPAEntity groupSet) {
+        sets.remove(groupSet);
+        return this.getAdmin();
     }
 
 }

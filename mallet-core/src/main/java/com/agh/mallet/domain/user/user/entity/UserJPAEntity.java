@@ -1,8 +1,9 @@
 package com.agh.mallet.domain.user.user.entity;
 
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
+import com.agh.mallet.domain.term.entity.TermJPAEntity;
 import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
-import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,7 +44,6 @@ public class UserJPAEntity {
 
     @Column(name = "ENABLED")
     private Boolean enabled = false;
-
     @ManyToMany
     @JoinTable(name = "USERS_KNOWN_TERMS",
             joinColumns = @JoinColumn(name = "USER_ID"),
@@ -50,13 +52,12 @@ public class UserJPAEntity {
 
     @ManyToMany
     @JoinTable(name = "USERS_GROUPS",
-    joinColumns = @JoinColumn(name = "USER_ID"),
-    inverseJoinColumns = @JoinColumn(name = "" + "GROUP_ID"))
-    private Set<GroupJPAEntity> userGroups = new HashSet<>();
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "GROUP_ID"))
+    private List<GroupJPAEntity> userGroups = new ArrayList<>();
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "USER_ID")
-    private Set<SetJPAEntity> userSets = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "creator")
+    private List<SetJPAEntity> userSets = new ArrayList<>();
 
     public UserJPAEntity() {}
 
@@ -124,19 +125,19 @@ public class UserJPAEntity {
         this.knownTerms = knownTerms;
     }
 
-    public Set<GroupJPAEntity> getUserGroups() {
+    public List<GroupJPAEntity> getUserGroups() {
         return userGroups;
     }
 
-    public void setUserGroups(Set<GroupJPAEntity> userGroups) {
+    public void setUserGroups(List<GroupJPAEntity> userGroups) {
         this.userGroups = userGroups;
     }
 
-    public Set<SetJPAEntity> getUserSets() {
+    public List<SetJPAEntity> getUserSets() {
         return userSets;
     }
 
-    public void setUserSets(Set<SetJPAEntity> userSets) {
+    public void setUserSets(List<SetJPAEntity> userSets) {
         this.userSets = userSets;
     }
 
@@ -144,14 +145,14 @@ public class UserJPAEntity {
         return identifier;
     }
 
-    public UserJPAEntity addUserSet(SetJPAEntity userSet) {
+    public void addUserSet(SetJPAEntity userSet) {
         userSets.add(userSet);
-        return this;
+        userSet.setCreator(this);
     }
 
-    public UserJPAEntity removeUserSet(SetJPAEntity userSet) {
+    public void removeUserSet(SetJPAEntity userSet) {
         userSets.remove(userSet);
-        return this;
+        userSet.setCreator(null);
     }
 
 }

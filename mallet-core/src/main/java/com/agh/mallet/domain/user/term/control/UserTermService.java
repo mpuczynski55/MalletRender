@@ -3,8 +3,8 @@ package com.agh.mallet.domain.user.term.control;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.control.utils.UserValidator;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
-import com.agh.mallet.domain.vocabulary.control.repository.TermRepository;
-import com.agh.mallet.domain.vocabulary.entity.TermJPAEntity;
+import com.agh.mallet.domain.term.control.repository.TermRepository;
+import com.agh.mallet.domain.term.entity.TermJPAEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

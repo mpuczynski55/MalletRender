@@ -11,6 +11,5 @@ public record ErrorResponseDTO(
         int httpCode,
         String httpStatus,
         String message,
-        String stackTrace
-        ) {
+        String stackTrace) {
 }

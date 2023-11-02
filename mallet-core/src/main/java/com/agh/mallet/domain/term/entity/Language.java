@@ -1,7 +1,5 @@
-package com.agh.mallet.domain.vocabulary.entity;
+package com.agh.mallet.domain.term.entity;
 
-import com.agh.mallet.infrastructure.exception.ExceptionType;
-import com.agh.mallet.infrastructure.exception.MalletException;
 import com.agh.mallet.infrastructure.exception.MalletIllegalArgumentException;
 
 import java.util.Arrays;
