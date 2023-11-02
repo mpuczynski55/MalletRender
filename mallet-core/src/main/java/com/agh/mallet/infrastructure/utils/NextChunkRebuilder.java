@@ -1,7 +1,6 @@
 package com.agh.mallet.infrastructure.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -25,8 +24,8 @@ public class NextChunkRebuilder {
     public <T> String rebuild(Collection<T> resultResource,
                               Integer startPosition,
                               Integer limit) {
-        if (resultResource.isEmpty()) {
-            return StringUtils.EMPTY;
+        if (resultResource.isEmpty() || resultResource.size() < limit) {
+            return null;
         }
 
         return rebuild(startPosition, limit);

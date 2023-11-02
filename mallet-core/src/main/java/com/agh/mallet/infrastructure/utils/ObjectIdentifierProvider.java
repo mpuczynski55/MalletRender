@@ -1,6 +1,6 @@
 package com.agh.mallet.infrastructure.utils;
 
-import com.agh.mallet.domain.user.group.control.GroupRepository;
+import com.agh.mallet.domain.group.control.GroupRepository;
 import com.agh.mallet.domain.user.user.control.repository.UserRepository;
 import org.springframework.stereotype.Component;
 

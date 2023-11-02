@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.group.entity;
+package com.agh.mallet.domain.group.entity;
 
 public enum PermissionType {
 

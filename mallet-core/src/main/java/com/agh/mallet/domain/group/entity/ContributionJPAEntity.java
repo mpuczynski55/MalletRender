@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.group.entity;
+package com.agh.mallet.domain.group.entity;
 
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import jakarta.persistence.Column;
@@ -8,8 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity

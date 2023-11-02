@@ -1,6 +1,6 @@
-package com.agh.mallet.domain.user.group.control;
+package com.agh.mallet.domain.group.control;
 
-import com.agh.mallet.domain.user.group.entity.ContributionJPAEntity;
+import com.agh.mallet.domain.group.entity.ContributionJPAEntity;
 import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import org.springframework.stereotype.Service;
 

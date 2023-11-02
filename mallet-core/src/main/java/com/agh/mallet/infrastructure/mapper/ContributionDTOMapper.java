@@ -1,9 +1,8 @@
 package com.agh.mallet.infrastructure.mapper;
 
 import com.agh.api.ContributionDTO;
-import com.agh.api.UserDTO;
 import com.agh.api.PermissionType;
-import com.agh.mallet.domain.user.group.entity.ContributionJPAEntity;
+import com.agh.mallet.domain.group.entity.ContributionJPAEntity;
 
 import java.util.Collection;
 import java.util.List;

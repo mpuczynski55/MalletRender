@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.group.entity;
+package com.agh.mallet.domain.group.entity;
 
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;

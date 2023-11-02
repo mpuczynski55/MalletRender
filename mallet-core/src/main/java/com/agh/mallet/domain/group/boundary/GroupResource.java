@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.group.boundary;
+package com.agh.mallet.domain.group.boundary;
 
 import com.agh.api.GroupContributionDeleteDTO;
 import com.agh.api.GroupCreateDTO;
@@ -7,7 +7,7 @@ import com.agh.api.GroupSetCreateDTO;
 import com.agh.api.GroupSetDTO;
 import com.agh.api.GroupUpdateAdminDTO;
 import com.agh.api.GroupUpdateDTO;
-import com.agh.mallet.domain.user.group.control.GroupService;
+import com.agh.mallet.domain.group.control.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

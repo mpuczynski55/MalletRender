@@ -2,7 +2,7 @@ package com.agh.mallet.domain.user.user.entity;
 
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
-import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
+import com.agh.mallet.domain.group.entity.GroupJPAEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

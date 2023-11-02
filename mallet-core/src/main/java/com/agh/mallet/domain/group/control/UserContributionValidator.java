@@ -1,8 +1,8 @@
-package com.agh.mallet.domain.user.group.control;
+package com.agh.mallet.domain.group.control;
 
-import com.agh.mallet.domain.user.group.entity.ContributionJPAEntity;
-import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
-import com.agh.mallet.domain.user.group.entity.PermissionType;
+import com.agh.mallet.domain.group.entity.ContributionJPAEntity;
+import com.agh.mallet.domain.group.entity.GroupJPAEntity;
+import com.agh.mallet.domain.group.entity.PermissionType;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.exception.MalletForbiddenException;
 

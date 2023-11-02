@@ -43,7 +43,6 @@ public class UserSetService {
                            String userEmail) {
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
 
-
         List<SetJPAEntity> userSets = userEntity.getUserSets();
         String nextChunkUri = nextChunkRebuilder.rebuild(userSets, startPosition, limit);
 

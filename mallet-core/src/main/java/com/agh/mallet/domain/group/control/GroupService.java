@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.group.control;
+package com.agh.mallet.domain.group.control;
 
 import com.agh.api.ContributionDTO;
 import com.agh.api.GroupContributionDeleteDTO;
@@ -15,9 +15,9 @@ import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.control.repository.TermRepository;
 import com.agh.mallet.domain.term.entity.Language;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
-import com.agh.mallet.domain.user.group.entity.ContributionJPAEntity;
-import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
-import com.agh.mallet.domain.user.group.entity.PermissionType;
+import com.agh.mallet.domain.group.entity.ContributionJPAEntity;
+import com.agh.mallet.domain.group.entity.GroupJPAEntity;
+import com.agh.mallet.domain.group.entity.PermissionType;
 import com.agh.mallet.domain.user.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;

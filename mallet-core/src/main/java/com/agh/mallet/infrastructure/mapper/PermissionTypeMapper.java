@@ -1,6 +1,6 @@
 package com.agh.mallet.infrastructure.mapper;
 
-import com.agh.mallet.domain.user.group.entity.PermissionType;
+import com.agh.mallet.domain.group.entity.PermissionType;
 import com.agh.mallet.infrastructure.exception.MalletIllegalArgumentException;
 
 import java.util.Arrays;

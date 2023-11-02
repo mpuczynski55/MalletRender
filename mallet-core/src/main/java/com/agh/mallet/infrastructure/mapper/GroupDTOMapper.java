@@ -2,7 +2,7 @@ package com.agh.mallet.infrastructure.mapper;
 
 import com.agh.api.ContributionDTO;
 import com.agh.api.GroupDTO;
-import com.agh.mallet.domain.user.group.entity.GroupJPAEntity;
+import com.agh.mallet.domain.group.entity.GroupJPAEntity;
 
 import java.util.List;
 
