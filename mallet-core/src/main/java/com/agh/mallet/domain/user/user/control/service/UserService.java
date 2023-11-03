@@ -114,7 +114,7 @@ public class UserService  {
             return Collections.emptyList();
         }
 
-        List<UserJPAEntity> users = userRepository.findAllByUsernameStartingWith(username);
+        List<UserJPAEntity> users = userRepository.findAllByUsernameContainingIgnoreCase(username);
 
         return UserDTOMapper.from(users);
     }

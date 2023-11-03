@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<UserJPAEntity, Long> {
 
     long countAllByUsername(String username);
 
-    List<UserJPAEntity> findAllByUsernameStartingWith(String username);
+    List<UserJPAEntity> findAllByUsernameContainingIgnoreCase(String username);
 
 }
