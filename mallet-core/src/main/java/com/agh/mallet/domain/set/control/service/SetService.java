@@ -4,7 +4,7 @@ import com.agh.api.SetBasicDTO;
 import com.agh.api.SetDetailDTO;
 import com.agh.api.SetUpdateDTO;
 import com.agh.api.TermDTO;
-import com.agh.mallet.domain.group.control.GroupService;
+import com.agh.mallet.domain.group.control.GroupRepository;
 import com.agh.mallet.domain.group.control.UserContributionValidator;
 import com.agh.mallet.domain.group.entity.GroupJPAEntity;
 import com.agh.mallet.domain.set.control.repository.SetRepository;
@@ -32,15 +32,17 @@ import java.util.stream.Collectors;
 public class SetService {
 
     public static final String SET_NOT_FOUND_ERROR_MSG = "Set with id: {0} was not found";
+    private static final String GROUP_NOT_FOUND_ERROR_MSG = "Group with id: {0} was not found";
+
     private static final String INSUFFICIENT_PERMISSION_PREFIX_MSG = "Insufficient permission to ";
     private static final String PERMISSION_SYNC_UPDATE_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "update set";
     private final SetRepository setRepository;
-    private final GroupService groupService;
+    private final GroupRepository groupRepository;
     private final NextChunkRebuilder nextChunkRebuilder;
 
-    public SetService(SetRepository setRepository, GroupService groupService, NextChunkRebuilder nextChunkRebuilder) {
+    public SetService(SetRepository setRepository, GroupRepository groupRepository, NextChunkRebuilder nextChunkRebuilder) {
         this.setRepository = setRepository;
-        this.groupService = groupService;
+        this.groupRepository = groupRepository;
         this.nextChunkRebuilder = nextChunkRebuilder;
     }
 
@@ -141,7 +143,17 @@ public class SetService {
             throw new MalletForbiddenException(PERMISSION_SYNC_UPDATE_ERROR_MSG);
         }
 
-        GroupJPAEntity groupEntity = groupService.getById(setUpdateDTO.groupId());
+        Long groupId = setUpdateDTO.groupId();
+        GroupJPAEntity groupEntity = groupRepository.findById(groupId)
+                        .orElseThrow(supplyGroupNotFoundException(groupId));
         UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_SYNC_UPDATE_ERROR_MSG);
     }
+
+    private Supplier<MalletNotFoundException> supplyGroupNotFoundException(long groupId) {
+        return () -> {
+            String message = MessageFormat.format(GROUP_NOT_FOUND_ERROR_MSG, groupId);
+            throw new MalletNotFoundException(message);
+        };
+    }
+
 }
