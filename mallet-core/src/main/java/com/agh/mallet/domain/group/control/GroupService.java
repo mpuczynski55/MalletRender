@@ -192,7 +192,7 @@ public class GroupService {
         existingContribution.setSetPermissionType(setPermissionType);
     }
 
-    private GroupJPAEntity getById(long id) {
+    public GroupJPAEntity getById(long id) {
         return groupRepository.findById(id)
                 .orElseThrow(supplyGroupNotFoundException(id));
     }

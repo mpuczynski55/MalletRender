@@ -6,14 +6,16 @@ import lombok.NonNull;
 import java.util.List;
 
 @Builder
-public record SetDetailDTO(
+public record SetUpdateDTO(
+        Long groupId,
         @NonNull
         Long id,
         @NonNull
-        String name,
+        String topic,
         String description,
         @NonNull
-        List<TermDTO> terms,
-        String nextChunkUri
+        List<TermDTO> terms
 ) {
+
+
 }

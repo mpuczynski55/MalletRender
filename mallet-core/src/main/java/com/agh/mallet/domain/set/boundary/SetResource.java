@@ -2,6 +2,7 @@ package com.agh.mallet.domain.set.boundary;
 
 import com.agh.api.SetBasicDTO;
 import com.agh.api.SetDetailDTO;
+import com.agh.api.SetUpdateDTO;
 import com.agh.mallet.domain.set.control.service.SetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,10 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.Set;
 
 @Tag(name = "Set Resource")
@@ -57,6 +61,16 @@ public class SetResource {
         SetDetailDTO setDTO = setService.get(id, termStartPosition, termLimit, primaryLanguage);
 
         return new ResponseEntity<>(setDTO, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Sync set"
+    )
+    @PutMapping
+    public ResponseEntity<Object> syncSet(@RequestBody SetUpdateDTO setUpdateDTO, Principal principal) {
+        setService.syncSet(setUpdateDTO, principal.getName());
+
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 }

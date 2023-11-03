@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -17,7 +18,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class TermJPAEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "TERM", nullable = false)
     private String term;
@@ -101,5 +102,17 @@ public class TermJPAEntity {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(term).append(language).append(definition).append(translation).toHashCode();
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
+    }
+
+    public void setTermDictionary(boolean termDictionary) {
+        isTermDictionary = termDictionary;
+    }
+
+    public void setTranslation(TermJPAEntity translation) {
+        this.translation = translation;
     }
 }

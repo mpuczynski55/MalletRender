@@ -2,10 +2,16 @@ package com.agh.mallet.domain.set.control.service;
 
 import com.agh.api.SetBasicDTO;
 import com.agh.api.SetDetailDTO;
+import com.agh.api.SetUpdateDTO;
+import com.agh.api.TermDTO;
+import com.agh.mallet.domain.group.control.GroupService;
+import com.agh.mallet.domain.group.control.UserContributionValidator;
+import com.agh.mallet.domain.group.entity.GroupJPAEntity;
 import com.agh.mallet.domain.set.control.repository.SetRepository;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.entity.Language;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
+import com.agh.mallet.infrastructure.exception.MalletForbiddenException;
 import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.mapper.SetInformationDTOMapper;
@@ -15,19 +21,26 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 public class SetService {
 
     public static final String SET_NOT_FOUND_ERROR_MSG = "Set with id: {0} was not found";
+    private static final String INSUFFICIENT_PERMISSION_PREFIX_MSG = "Insufficient permission to ";
+    private static final String PERMISSION_SYNC_UPDATE_ERROR_MSG = INSUFFICIENT_PERMISSION_PREFIX_MSG + "update set";
     private final SetRepository setRepository;
+    private final GroupService groupService;
     private final NextChunkRebuilder nextChunkRebuilder;
 
-    public SetService(SetRepository setRepository, NextChunkRebuilder nextChunkRebuilder) {
+    public SetService(SetRepository setRepository, GroupService groupService, NextChunkRebuilder nextChunkRebuilder) {
         this.setRepository = setRepository;
+        this.groupService = groupService;
         this.nextChunkRebuilder = nextChunkRebuilder;
     }
 
@@ -83,10 +96,52 @@ public class SetService {
                 .orElseThrow(supplySetNotFoundException(id));
     }
 
-    private static Supplier<MalletNotFoundException> supplySetNotFoundException(long setId) {
+    private Supplier<MalletNotFoundException> supplySetNotFoundException(long setId) {
         String message = MessageFormat.format(SET_NOT_FOUND_ERROR_MSG, setId);
         return () -> new MalletNotFoundException(message);
     }
 
 
+    public void syncSet(SetUpdateDTO setUpdateDTO, String userEmail) {
+        SetJPAEntity setEntity = getById(setUpdateDTO.id());
+
+        validateUserPermissionsToUpdateSet(userEmail, setEntity, setUpdateDTO);
+
+        setEntity.setDescription(setUpdateDTO.description());
+        setEntity.setName(setUpdateDTO.topic());
+
+        Map<Long, TermDTO> termById = setUpdateDTO.terms().stream()
+                .collect(Collectors.toMap(TermDTO::id, Function.identity()));
+
+        Set<TermJPAEntity> terms = setEntity.getTerms();
+        terms.forEach(term -> updateTerms(termById, term));
+
+        setRepository.save(setEntity);
+    }
+
+    private void updateTerms(Map<Long, TermDTO> termById, TermJPAEntity term) {
+        if (!termById.containsKey(term.getId())) {
+            return;
+        }
+
+        TermDTO newTerm = termById.get(term.getId());
+        term.setTerm(newTerm.term());
+        term.setDefinition(newTerm.definition());
+        TermJPAEntity translationEntity = term.getTranslation();
+        TermDTO newTranslation = newTerm.translation();
+        translationEntity.setDefinition(newTranslation.definition());
+        translationEntity.setTerm(newTranslation.term());
+    }
+
+    private void validateUserPermissionsToUpdateSet(String userEmail,
+                                                    SetJPAEntity setJPAEntity,
+                                                    SetUpdateDTO setUpdateDTO) {
+
+        if (Objects.isNull(setUpdateDTO.groupId()) && !setJPAEntity.getCreator().getEmail().equals(userEmail)) {
+            throw new MalletForbiddenException(PERMISSION_SYNC_UPDATE_ERROR_MSG);
+        }
+
+        GroupJPAEntity groupEntity = groupService.getById(setUpdateDTO.groupId());
+        UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_SYNC_UPDATE_ERROR_MSG);
+    }
 }

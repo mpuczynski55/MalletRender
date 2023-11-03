@@ -9,7 +9,7 @@ import java.util.List;
 public record TermBasicListDTO(
 
         @NonNull
-        List<TermBasicDTO> terms,
+        List<TermDTO> terms,
         String nextChunkUri
 
 ) {

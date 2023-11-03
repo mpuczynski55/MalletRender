@@ -1,6 +1,6 @@
 package com.agh.mallet.infrastructure.mapper;
 
-import com.agh.api.TermBasicDTO;
+import com.agh.api.TermDTO;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
 import com.agh.mallet.infrastructure.utils.LanguageConverter;
 
@@ -13,7 +13,7 @@ public class TermBasicDTOMapper {
     private TermBasicDTOMapper() {
     }
 
-    public static List<TermBasicDTO> from(Collection<TermJPAEntity> termEntities) {
+    public static List<TermDTO> from(Collection<TermJPAEntity> termEntities) {
         return termEntities.stream()
                 .map(TermBasicDTOMapper::from)
                 .filter(Optional::isPresent)
@@ -21,14 +21,14 @@ public class TermBasicDTOMapper {
                 .toList();
     }
 
-    private static Optional<TermBasicDTO> from(TermJPAEntity termEntity) {
+    private static Optional<TermDTO> from(TermJPAEntity termEntity) {
         return Optional.ofNullable(termEntity.getTranslation())
                 .flatMap(TermBasicDTOMapper::from)
                 .map(translation -> TermBasicDTOMapper.from(termEntity, translation));
     }
 
-    private static TermBasicDTO from(TermJPAEntity termEntity, TermBasicDTO translation) {
-        return TermBasicDTO.builder()
+    private static TermDTO from(TermJPAEntity termEntity, TermDTO translation) {
+        return TermDTO.builder()
                 .id(termEntity.getId())
                 .term(termEntity.getTerm())
                 .definition(termEntity.getDefinition())
