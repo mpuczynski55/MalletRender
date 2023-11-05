@@ -6,6 +6,7 @@ import com.agh.mallet.domain.group.entity.GroupJPAEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,19 +46,19 @@ public class UserJPAEntity {
 
     @Column(name = "ENABLED")
     private Boolean enabled = false;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_KNOWN_TERMS",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "KNOWN_TERM_ID"))
     private Set<TermJPAEntity> knownTerms = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_GROUPS",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "GROUP_ID"))
     private List<GroupJPAEntity> userGroups = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "creator")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "creator")
     private List<SetJPAEntity> userSets = new ArrayList<>();
 
     public UserJPAEntity() {}

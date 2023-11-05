@@ -1,8 +1,7 @@
 package com.agh.mallet.infrastructure.mapper;
 
-import com.agh.api.SetDetailDTO;
-import com.agh.api.TermDTO;
-import com.agh.mallet.domain.term.entity.TermJPAEntity;
+import com.agh.api.UserDTO;
+import com.agh.api.SetInformationDTO;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 
 import java.util.Collection;
@@ -12,35 +11,21 @@ public class SetInformationDTOMapper {
 
     private SetInformationDTOMapper() {}
 
-    public static SetDetailDTO from(long setId,
-                                    List<TermJPAEntity> termJPAEntities,
-                                    String nextChunkUri) {
-        List<TermDTO> terms = TermDTOMapper.from(termJPAEntities);
-
-        return SetDetailDTO.builder()
-                .id(setId)
-                .terms(terms)
-                .nextChunkUri(nextChunkUri)
-                .build();
-    }
-
-    public static List<SetDetailDTO> from(Collection<SetJPAEntity> sets,
-                                          String nextChunkUri) {
+    public static List<SetInformationDTO> from(Collection<SetJPAEntity> sets) {
         return sets.stream()
-                .map(entity -> from(entity, nextChunkUri))
+                .map(SetInformationDTOMapper::from)
                 .toList();
     }
 
-    public static SetDetailDTO from(SetJPAEntity set,
-                                    String nextChunkUri) {
-        List<TermDTO> terms = TermDTOMapper.from(set.getTerms());
+    public static SetInformationDTO from(SetJPAEntity set) {
+        UserDTO creator = UserDTOMapper.from(set.getCreator());
 
-        return SetDetailDTO.builder()
+        return SetInformationDTO.builder()
                 .id(set.getId())
                 .name(set.getName())
+                .creator(creator)
+                .numberOfTerms(set.getTerms().size())
                 .description(set.getDescription())
-                .terms(terms)
-                .nextChunkUri(nextChunkUri)
                 .build();
     }
 

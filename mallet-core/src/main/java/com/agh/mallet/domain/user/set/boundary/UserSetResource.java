@@ -32,8 +32,8 @@ public class UserSetResource {
     }
 
     @Operation(
-            summary = "Get all user's sets",
-            description = "Get all user's sets. If the terms result exceeds limit param then next chunk uri is returned"
+            summary = "Get all contributor's sets",
+            description = "Get all contributor's sets. If the terms result exceeds limit param then next chunk uri is returned"
     )
     @GetMapping
     @ResponseBody

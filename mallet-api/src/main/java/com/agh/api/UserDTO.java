@@ -7,9 +7,7 @@ import lombok.NonNull;
 public record UserDTO(
         @NonNull
         Long id,
-        @NonNull
         String name,
-        @NonNull
         String identifier
 ) {
 }

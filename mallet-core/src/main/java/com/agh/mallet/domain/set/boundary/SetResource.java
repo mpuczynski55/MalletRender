@@ -56,7 +56,7 @@ public class SetResource {
     public ResponseEntity<SetDetailDTO> get(@RequestParam(name = "id") long id,
                                             @RequestParam(name = "termStartPosition", defaultValue = "0") int termStartPosition,
                                             @RequestParam(name = "termLimit", defaultValue = "20") int termLimit,
-                                            @RequestParam(name = "language") String primaryLanguage) {
+                                            @RequestParam(name = "language", defaultValue = "EN") String primaryLanguage) {
 
         SetDetailDTO setDTO = setService.get(id, termStartPosition, termLimit, primaryLanguage);
 

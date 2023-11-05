@@ -11,7 +11,7 @@ public record ContributionDTO (
         @NonNull
         PermissionType groupPermissionType,
         @NonNull
-        Long contributorId
+        UserDTO contributor
 ){
 
 }

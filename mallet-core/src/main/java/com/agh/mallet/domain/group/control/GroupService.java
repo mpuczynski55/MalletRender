@@ -10,6 +10,7 @@ import com.agh.api.GroupUpdateAdminDTO;
 import com.agh.api.GroupUpdateDTO;
 import com.agh.api.SetCreateDTO;
 import com.agh.api.TermCreateDTO;
+import com.agh.api.UserDTO;
 import com.agh.mallet.domain.set.control.service.SetService;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.control.repository.TermRepository;
@@ -101,13 +102,15 @@ public class GroupService {
 
     private Set<Long> extractCreateContributorIds(List<ContributionDTO> contributions) {
         return contributions.stream()
-                .map(ContributionDTO::contributorId)
+                .map(ContributionDTO::contributor)
+                .map(UserDTO::id)
                 .collect(Collectors.toSet());
     }
 
     private List<Long> extractContributorIds(List<ContributionDTO> contributions) {
         return contributions.stream()
-                .map(ContributionDTO::contributorId)
+                .map(ContributionDTO::contributor)
+                .map(UserDTO::id)
                 .toList();
     }
 
@@ -130,7 +133,7 @@ public class GroupService {
 
     private Optional<UserJPAEntity> getMatchingContributor(ContributionDTO contributionDTO, List<UserJPAEntity> contributors) {
         return contributors.stream()
-                .filter(contributor -> contributor.getId().equals(contributionDTO.contributorId()))
+                .filter(contributor -> contributor.getId().equals(contributionDTO.contributor().id()))
                 .findFirst();
     }
 
@@ -156,7 +159,7 @@ public class GroupService {
 
     private List<ContributionDTO> getContributionsWithoutAdmin(GroupUpdateDTO groupUpdateDTO, GroupJPAEntity groupEntity) {
         return groupUpdateDTO.contributions().stream()
-                .filter(contribution -> !contribution.contributorId().equals(groupEntity.getAdmin().getId()))
+                .filter(contribution -> !contribution.contributor().id().equals(groupEntity.getAdmin().getId()))
                 .toList();
     }
 

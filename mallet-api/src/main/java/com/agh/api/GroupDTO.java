@@ -12,7 +12,9 @@ public record GroupDTO(
         @NonNull
         String name,
         @NonNull
-        List<ContributionDTO> contributions
+        List<ContributionDTO> contributions,
+        @NonNull
+        List<SetInformationDTO> sets
 ) {
 
 }

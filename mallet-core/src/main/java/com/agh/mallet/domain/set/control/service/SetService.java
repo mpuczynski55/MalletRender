@@ -14,7 +14,7 @@ import com.agh.mallet.domain.term.entity.TermJPAEntity;
 import com.agh.mallet.infrastructure.exception.MalletForbiddenException;
 import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
-import com.agh.mallet.infrastructure.mapper.SetInformationDTOMapper;
+import com.agh.mallet.infrastructure.mapper.SetDetailDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -67,7 +67,7 @@ public class SetService {
 
         String nextChunkUri = nextChunkRebuilder.rebuild(terms, startPosition, limit);
 
-        return SetInformationDTOMapper.from(setId, terms, nextChunkUri);
+        return SetDetailDTOMapper.from(setId, terms, nextChunkUri);
     }
 
     public SetBasicDTO getBasics(Set<Long> ids,
