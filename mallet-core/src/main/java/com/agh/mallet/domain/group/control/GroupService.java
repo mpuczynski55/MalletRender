@@ -285,7 +285,10 @@ public class GroupService {
 
         SetCreateDTO set = groupSetCreateDTO.set();
         Set<TermJPAEntity> mergedTerms = getToCreateAndExistingTerms(set);
-        SetJPAEntity setJPAEntity = new SetJPAEntity(set.topic(), set.description(), mergedTerms);
+        String setTopic = set.topic();
+        String setIdentifier = objectIdentifierProvider.fromSetName(setTopic);
+
+        SetJPAEntity setJPAEntity = new SetJPAEntity(setTopic, setIdentifier, set.description(), mergedTerms);
 
         groupEntity.addSet(setJPAEntity);
 

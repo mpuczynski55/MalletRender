@@ -1,13 +1,15 @@
 package com.agh.mallet.domain.set.control.repository;
 
+import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.entity.Language;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
-import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface SetRepository extends JpaRepository<SetJPAEntity, Long>, JpaSpecificationExecutor<SetJPAEntity> {
 
@@ -16,5 +18,10 @@ public interface SetRepository extends JpaRepository<SetJPAEntity, Long>, JpaSpe
 
     @Query("SELECT m FROM SetJPAEntity o JOIN o.terms m WHERE m.language =?1")
     Page<SetJPAEntity> findAllByTermsLanguage(Language language, Pageable pageable);
+
+    List<SetJPAEntity> findAllByNameContainingIgnoreCase(String topic);
+
+    long countAllByName(String name);
+
 
 }

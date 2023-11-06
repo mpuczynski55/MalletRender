@@ -1,7 +1,7 @@
 package com.agh.mallet.domain.set.entity;
 
-import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
+import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +30,9 @@ public class SetJPAEntity {
     @Column(name = "NAME", nullable = false)
     private String name;
 
+    @Column(name = "IDENTIFIER", nullable = false)
+    private String identifier;
+
     @Column(name = "DESCRIPTION")
     private String description;
 
@@ -47,13 +50,15 @@ public class SetJPAEntity {
 
     public SetJPAEntity(SetJPAEntity setJPAEntity) {
         this.name = setJPAEntity.getName();
+        this.identifier = setJPAEntity.getIdentifier();
         this.description = setJPAEntity.getDescription();
         addTerms(setJPAEntity.getTerms());
     }
 
-    public SetJPAEntity(String name, String description, Set<TermJPAEntity> terms) {
+    public SetJPAEntity(String name, String identifier, String description, Set<TermJPAEntity> terms) {
         this.name = name;
         this.description = description;
+        this.identifier = identifier;
         this.terms = terms;
     }
 
@@ -106,5 +111,13 @@ public class SetJPAEntity {
 
     public void setCreator(UserJPAEntity creator) {
         this.creator = creator;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

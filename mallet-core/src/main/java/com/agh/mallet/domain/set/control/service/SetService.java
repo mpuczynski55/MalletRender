@@ -52,6 +52,12 @@ public class SetService {
         return SetBasicsDTOMapper.from(sets);
     }
 
+    public SetBasicDTO getBasics(String topic) {
+        List<SetJPAEntity> sets = setRepository.findAllByNameContainingIgnoreCase(topic);
+
+        return SetBasicsDTOMapper.from(sets);
+    }
+
     public SetDetailDTO get(long setId,
                             int startPosition,
                             int limit,
@@ -71,11 +77,16 @@ public class SetService {
     }
 
     public SetBasicDTO getBasics(Set<Long> ids,
+                                 String topic,
                                  int startPosition,
                                  int limit,
                                  String primaryLanguage) {
         if (Objects.nonNull(ids)) {
             return getBasics(ids);
+        }
+
+        if (Objects.nonNull(topic)) {
+            return getBasics(topic);
         }
 
         if (limit > 10) {
