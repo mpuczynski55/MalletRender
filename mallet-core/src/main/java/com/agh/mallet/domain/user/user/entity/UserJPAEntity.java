@@ -135,6 +135,10 @@ public class UserJPAEntity {
         this.userGroups = userGroups;
     }
 
+    public void addUserGroup(GroupJPAEntity userGroups) {
+        this.userGroups.add(userGroups);
+    }
+
     public List<SetJPAEntity> getUserSets() {
         return userSets;
     }

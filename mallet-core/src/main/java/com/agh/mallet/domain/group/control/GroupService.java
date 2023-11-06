@@ -96,6 +96,8 @@ public class GroupService {
         GroupJPAEntity groupEntity = new GroupJPAEntity(groupName, groupIdentifier, contributionEntities, creator);
 
         GroupJPAEntity savedGroup = groupRepository.save(groupEntity);
+        creator.addUserGroup(savedGroup);
+        userService.save(creator);
 
         return savedGroup.getId();
     }
