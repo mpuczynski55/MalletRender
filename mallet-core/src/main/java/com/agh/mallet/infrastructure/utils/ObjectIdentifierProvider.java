@@ -22,19 +22,22 @@ public class ObjectIdentifierProvider {
     public String fromUsername(String username){
         long userCount = userRepository.countAllByUsername(username);
 
-        return username + HASHTAG + userCount;
+        return trimWhitespaces(username + HASHTAG + userCount);
     }
 
     public String fromGroupName(String groupName){
         long userCount = groupRepository.countAllByName(groupName);
 
-        return groupName + HASHTAG + userCount;
+        return trimWhitespaces(groupName + HASHTAG + userCount);
     }
 
-    public String fromSetName(String setName){
+    public String fromSetName(String setName) {
         long userCount = setRepository.countAllByName(setName);
 
-        return setName + HASHTAG + userCount;
+        return trimWhitespaces(setName + HASHTAG + userCount);
     }
 
+    private String trimWhitespaces(String value) {
+        return value.replaceAll("\\s", "");
+    }
 }

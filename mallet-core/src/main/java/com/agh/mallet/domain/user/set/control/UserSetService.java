@@ -9,11 +9,13 @@ import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.control.repository.TermRepository;
 import com.agh.mallet.domain.term.entity.Language;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
+import com.agh.mallet.domain.user.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -29,15 +31,17 @@ public class UserSetService {
     private final UserService userService;
     private final SetService setService;
     private final SetRepository setRepository;
+    private final UserRepository userRepository;
     private final NextChunkRebuilder nextChunkRebuilder;
     private final TermRepository termRepository;
     private final ObjectIdentifierProvider identifierProvider;
 
 
-    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider identifierProvider) {
+    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider identifierProvider) {
         this.userService = userService;
         this.setService = setService;
         this.setRepository = setRepository;
+        this.userRepository = userRepository;
         this.nextChunkRebuilder = nextChunkRebuilder;
         this.termRepository = termRepository;
         this.identifierProvider = identifierProvider;
@@ -46,16 +50,12 @@ public class UserSetService {
     public SetBasicDTO get(int startPosition,
                            int limit,
                            String userEmail) {
-        UserJPAEntity userEntity = userService.getByEmail(userEmail);
-
-        List<SetJPAEntity> userSets = userEntity.getUserSets();
+        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+        List<SetJPAEntity> userSets = userRepository.findAllSetsByUserEmail(userEmail, pageRequest)
+                .getContent();
         String nextChunkUri = nextChunkRebuilder.rebuild(userSets, startPosition, limit);
 
-        Set<SetJPAEntity> limitedSets = userSets.stream()
-                .limit(limit)
-                .collect(Collectors.toSet());
-
-        return SetBasicsDTOMapper.from(limitedSets, nextChunkUri);
+        return SetBasicsDTOMapper.from(userSets, nextChunkUri);
     }
 
     public void add(String userEmail, long setId) {
@@ -95,7 +95,7 @@ public class UserSetService {
         String identifier = identifierProvider.fromSetName(setCreateDTO.topic());
 
         Set<TermJPAEntity> mergedTerms = getToCreateAndExistingTerms(setCreateDTO);
-        SetJPAEntity setJPAEntity = new SetJPAEntity(setCreateDTO.topic(), identifier, setCreateDTO.description(), mergedTerms, userEntity);
+        SetJPAEntity setJPAEntity = new SetJPAEntity(setCreateDTO.topic(), setCreateDTO.description(), identifier, mergedTerms, userEntity);
 
         userEntity.getUserSets().add(setJPAEntity);
 

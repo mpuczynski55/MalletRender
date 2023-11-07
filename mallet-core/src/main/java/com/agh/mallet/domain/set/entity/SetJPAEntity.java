@@ -73,7 +73,6 @@ public class SetJPAEntity {
         this.description = description;
         this.terms = terms;
         this.creator = creator;
-
     }
 
     public Long getId() {

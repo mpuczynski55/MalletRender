@@ -34,7 +34,7 @@ public class NextChunkRebuilder {
     private String rebuild(Integer startPosition,
                           Integer limit) {
         String currentStartPositionTemplate = String.format(START_POSITION_PARAM_TEMPLATE, startPosition);
-        String nextChunkStartPositionTemplate = String.format(START_POSITION_PARAM_TEMPLATE, startPosition + limit);
+        String nextChunkStartPositionTemplate = String.format(START_POSITION_PARAM_TEMPLATE, startPosition + 1);
 
         String currentUrl = servletRequest.getRequestURI();
 
