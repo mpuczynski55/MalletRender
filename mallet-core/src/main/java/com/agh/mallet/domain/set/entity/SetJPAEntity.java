@@ -46,7 +46,8 @@ public class SetJPAEntity {
     @ManyToOne
     private UserJPAEntity creator;
 
-    public SetJPAEntity() {}
+    public SetJPAEntity() {
+    }
 
     public SetJPAEntity(SetJPAEntity setJPAEntity) {
         this.name = setJPAEntity.getName();
@@ -66,11 +67,13 @@ public class SetJPAEntity {
         return creator;
     }
 
-    public SetJPAEntity(String name, String description, Set<TermJPAEntity> terms, UserJPAEntity creator) {
+    public SetJPAEntity(String name, String description, String identifier, Set<TermJPAEntity> terms, UserJPAEntity creator) {
         this.name = name;
+        this.identifier = identifier;
         this.description = description;
         this.terms = terms;
         this.creator = creator;
+
     }
 
     public Long getId() {

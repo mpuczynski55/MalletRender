@@ -13,6 +13,7 @@ import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
+import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,14 +29,16 @@ public class UserSetService {
     private final SetRepository setRepository;
     private final NextChunkRebuilder nextChunkRebuilder;
     private final TermRepository termRepository;
+    private final ObjectIdentifierProvider identifierProvider;
 
 
-    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository) {
+    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider identifierProvider) {
         this.userService = userService;
         this.setService = setService;
         this.setRepository = setRepository;
         this.nextChunkRebuilder = nextChunkRebuilder;
         this.termRepository = termRepository;
+        this.identifierProvider = identifierProvider;
     }
 
     public SetBasicDTO get(int startPosition,
@@ -83,9 +86,10 @@ public class UserSetService {
 
     public void create(SetCreateDTO setCreateDTO, String userEmail) {
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
+        String identifier = identifierProvider.fromSetName(setCreateDTO.topic());
 
         Set<TermJPAEntity> mergedTerms = getToCreateAndExistingTerms(setCreateDTO);
-        SetJPAEntity setJPAEntity = new SetJPAEntity(setCreateDTO.topic(), setCreateDTO.description(), mergedTerms, userEntity);
+        SetJPAEntity setJPAEntity = new SetJPAEntity(setCreateDTO.topic(), identifier, setCreateDTO.description(), mergedTerms, userEntity);
 
         userEntity.getUserSets().add(setJPAEntity);
 
