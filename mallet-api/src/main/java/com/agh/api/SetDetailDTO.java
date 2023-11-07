@@ -9,7 +9,6 @@ import java.util.List;
 public record SetDetailDTO(
         @NonNull
         Long id,
-        @NonNull
         String name,
         String description,
         @NonNull

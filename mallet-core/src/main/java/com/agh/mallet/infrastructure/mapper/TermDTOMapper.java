@@ -6,7 +6,6 @@ import com.agh.mallet.infrastructure.utils.LanguageConverter;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class TermDTOMapper {
 
@@ -16,20 +15,23 @@ public class TermDTOMapper {
     public static List<TermDTO> from(Collection<TermJPAEntity> entities) {
         return entities.stream()
                 .map(TermDTOMapper::from)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .toList();
     }
 
-    public static Optional<TermDTO> from(TermJPAEntity entity) {
-        return Optional.ofNullable(entity.getTranslation())
-                .flatMap(TermDTOMapper::from)
-                .map(translation -> from(entity, translation));
-
+    private static TermDTO fromTranslation(TermJPAEntity entity) {
+        return TermDTO.builder()
+                .id(entity.getId())
+                .term(entity.getTerm())
+                .definition(entity.getDefinition())
+                .language(LanguageConverter.from(entity.getLanguage()))
+                .build();
     }
 
-    private static TermDTO from(TermJPAEntity entity, TermDTO translation) {
-        return TermDTO.builder()
+
+    private static TermDTO from(TermJPAEntity entity) {
+        TermDTO translation =  TermDTOMapper.fromTranslation(entity.getTranslation());
+        TermDTO.TermDTOBuilder builder = TermDTO.builder();
+        return builder
                 .id(entity.getId())
                 .term(entity.getTerm())
                 .definition(entity.getDefinition())
