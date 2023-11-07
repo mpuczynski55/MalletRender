@@ -3,6 +3,7 @@ package com.agh.mallet.domain.set.control.service;
 import com.agh.api.SetBasicDTO;
 import com.agh.api.SetDetailDTO;
 import com.agh.api.SetUpdateDTO;
+import com.agh.api.TermCreateDTO;
 import com.agh.api.TermDTO;
 import com.agh.mallet.domain.group.control.GroupRepository;
 import com.agh.mallet.domain.group.control.UserContributionValidator;
@@ -123,13 +124,35 @@ public class SetService {
         setEntity.setDescription(setUpdateDTO.description());
         setEntity.setName(setUpdateDTO.topic());
 
-        Map<Long, TermDTO> termById = setUpdateDTO.terms().stream()
+        List<TermJPAEntity> termsToCreate = setUpdateDTO.termsToCreate().stream()
+                .map(this::toTermJPAEntity)
+                .collect(Collectors.toList());
+
+        Map<Long, TermDTO> termById = setUpdateDTO.termsToUpdate().stream()
                 .collect(Collectors.toMap(TermDTO::id, Function.identity()));
 
         Set<TermJPAEntity> terms = setEntity.getTerms();
         terms.forEach(term -> updateTerms(termById, term));
+        terms.addAll(termsToCreate);
 
         setRepository.save(setEntity);
+    }
+
+    private TermJPAEntity toTermJPAEntity(TermCreateDTO term) {
+        return new TermJPAEntity(
+                term.term(),
+                Language.from(term.language().name()),
+                term.definition(),
+                toTranslationTermJPAEntity(term)
+        );
+    }
+
+    private TermJPAEntity toTranslationTermJPAEntity(TermCreateDTO term) {
+        return new TermJPAEntity(
+                term.translation().term(),
+                Language.from(term.translation().language().name()),
+                term.translation().definition()
+        );
     }
 
     private void updateTerms(Map<Long, TermDTO> termById, TermJPAEntity term) {
@@ -167,4 +190,7 @@ public class SetService {
         };
     }
 
+    public void save(SetJPAEntity setJPAEntity){
+        save(setJPAEntity);
+    }
 }

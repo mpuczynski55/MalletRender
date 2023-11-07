@@ -24,6 +24,7 @@ public class SetInformationDTOMapper {
                 .id(set.getId())
                 .name(set.getName())
                 .creator(creator)
+                .identifier(set.getIdentifier())
                 .numberOfTerms(set.getTerms().size())
                 .description(set.getDescription())
                 .build();

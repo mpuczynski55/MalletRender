@@ -14,7 +14,8 @@ public record SetUpdateDTO(
         String topic,
         String description,
         @NonNull
-        List<TermDTO> terms
+        List<TermDTO> termsToUpdate,
+        List<TermCreateDTO> termsToCreate
 ) {
 
 

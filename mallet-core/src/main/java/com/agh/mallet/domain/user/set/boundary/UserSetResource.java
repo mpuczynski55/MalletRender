@@ -72,10 +72,10 @@ public class UserSetResource {
             summary = "Create user set"
     )
     @PostMapping
-    public ResponseEntity<Object> createSet(@RequestBody SetCreateDTO setCreateDTO, Principal principal) {
-        userSetService.create(setCreateDTO, principal.getName());
+    public ResponseEntity<Long> createSet(@RequestBody SetCreateDTO setCreateDTO, Principal principal) {
+        Long setId = userSetService.create(setCreateDTO, principal.getName());
 
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(setId, HttpStatus.OK);
     }
 
 

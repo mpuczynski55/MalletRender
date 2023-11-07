@@ -34,7 +34,7 @@ public class GroupJPAEntity {
     @JoinColumn(name = "GROUP_ID")
     private Set<ContributionJPAEntity> contributions = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "GROUP_ID")
     private Set<SetJPAEntity> sets = new HashSet<>();
 

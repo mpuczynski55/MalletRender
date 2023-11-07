@@ -49,10 +49,11 @@ public class SetJPAEntity {
     public SetJPAEntity() {
     }
 
-    public SetJPAEntity(SetJPAEntity setJPAEntity) {
+    public SetJPAEntity(SetJPAEntity setJPAEntity, String identifier) {
         this.name = setJPAEntity.getName();
-        this.identifier = setJPAEntity.getIdentifier();
+        this.identifier = identifier;
         this.description = setJPAEntity.getDescription();
+        this.creator= setJPAEntity.getCreator();
         addTerms(setJPAEntity.getTerms());
     }
 

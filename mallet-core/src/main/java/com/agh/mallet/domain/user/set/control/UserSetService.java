@@ -34,16 +34,17 @@ public class UserSetService {
     private final UserRepository userRepository;
     private final NextChunkRebuilder nextChunkRebuilder;
     private final TermRepository termRepository;
+    private final ObjectIdentifierProvider objectIdentifierProvider;
     private final ObjectIdentifierProvider identifierProvider;
 
-
-    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider identifierProvider) {
+    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider objectIdentifierProvider, ObjectIdentifierProvider identifierProvider) {
         this.userService = userService;
         this.setService = setService;
         this.setRepository = setRepository;
         this.userRepository = userRepository;
         this.nextChunkRebuilder = nextChunkRebuilder;
         this.termRepository = termRepository;
+        this.objectIdentifierProvider = objectIdentifierProvider;
         this.identifierProvider = identifierProvider;
     }
 
@@ -67,7 +68,9 @@ public class UserSetService {
     }
 
     private void add(SetJPAEntity set, UserJPAEntity user) {
-        SetJPAEntity clonedSet = new SetJPAEntity(set);
+        String identifier = objectIdentifierProvider.fromSetName(set.getName());
+
+        SetJPAEntity clonedSet = new SetJPAEntity(set, identifier);
 
         user.addUserSet(clonedSet);
 
@@ -90,7 +93,7 @@ public class UserSetService {
         userService.save(user);
     }
 
-    public void create(SetCreateDTO setCreateDTO, String userEmail) {
+    public Long create(SetCreateDTO setCreateDTO, String userEmail) {
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
         String identifier = identifierProvider.fromSetName(setCreateDTO.topic());
 
@@ -100,6 +103,7 @@ public class UserSetService {
         userEntity.getUserSets().add(setJPAEntity);
 
         userService.save(userEntity);
+        return setJPAEntity.getId();
     }
 
     private Set<TermJPAEntity> getToCreateAndExistingTerms(SetCreateDTO setCreateDTO) {

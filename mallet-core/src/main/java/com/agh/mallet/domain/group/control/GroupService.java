@@ -259,11 +259,12 @@ public class GroupService {
 
     public void addSet(GroupSetDTO groupSetDTO, String userEmail) {
         GroupJPAEntity groupEntity = getById(groupSetDTO.groupId());
-
         UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_ADD_SET_ERROR_MSG);
 
         SetJPAEntity setToClone = setService.getById(groupSetDTO.setId());
-        SetJPAEntity clonedSet = new SetJPAEntity(setToClone);
+        String identifier = objectIdentifierProvider.fromSetName(setToClone.getName());
+
+        SetJPAEntity clonedSet = new SetJPAEntity(setToClone, identifier);
         groupEntity.addSet(clonedSet);
 
         groupRepository.save(groupEntity);

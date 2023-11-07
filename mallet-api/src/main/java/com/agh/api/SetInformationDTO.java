@@ -10,6 +10,8 @@ public record SetInformationDTO(
         @NonNull
         String name,
         @NonNull
+        String identifier,
+        @NonNull
         UserDTO creator,
         @NonNull
         int numberOfTerms,
