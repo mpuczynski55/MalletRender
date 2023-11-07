@@ -9,6 +9,7 @@ import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserGroupService {
@@ -29,6 +30,10 @@ public class UserGroupService {
         List<GroupJPAEntity> userGroups = userEntity.getUserGroups();
         String nextChunkUri = nextChunkRebuilder.rebuild(userGroups, startPosition, limit);
 
-        return GroupBasicDTOMapper.from(userGroups, nextChunkUri);
+        List<GroupJPAEntity> limitedGroups = userGroups.stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+
+        return GroupBasicDTOMapper.from(limitedGroups, nextChunkUri);
     }
 }

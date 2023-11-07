@@ -306,7 +306,8 @@ public class GroupService {
     }
 
     private List<TermJPAEntity> getTermsToCreate(SetCreateDTO setCreateDTO) {
-        return setCreateDTO.termsToCreate().stream()
+        return Optional.of(setCreateDTO.termsToCreate()).stream()
+                .flatMap(Collection::stream)
                 .map(this::toTermJPAEntity)
                 .toList();
     }

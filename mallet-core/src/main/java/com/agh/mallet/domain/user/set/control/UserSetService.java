@@ -16,7 +16,9 @@ import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,7 +51,11 @@ public class UserSetService {
         List<SetJPAEntity> userSets = userEntity.getUserSets();
         String nextChunkUri = nextChunkRebuilder.rebuild(userSets, startPosition, limit);
 
-        return SetBasicsDTOMapper.from(userSets, nextChunkUri);
+        Set<SetJPAEntity> limitedSets = userSets.stream()
+                .limit(limit)
+                .collect(Collectors.toSet());
+
+        return SetBasicsDTOMapper.from(limitedSets, nextChunkUri);
     }
 
     public void add(String userEmail, long setId) {
@@ -105,7 +111,8 @@ public class UserSetService {
     }
 
     private List<TermJPAEntity> getTermsToCreate(SetCreateDTO setCreateDTO) {
-        return setCreateDTO.termsToCreate().stream()
+        return Optional.ofNullable(setCreateDTO.termsToCreate()).stream()
+                .flatMap(Collection::stream)
                 .map(this::toTermJPAEntity)
                 .toList();
     }

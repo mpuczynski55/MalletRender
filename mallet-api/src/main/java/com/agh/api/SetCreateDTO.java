@@ -12,7 +12,6 @@ public record SetCreateDTO(
         String description,
         @NonNull
         List<Long> existingTermIds,
-        @NonNull
         List<TermCreateDTO> termsToCreate
 ) {
 }
