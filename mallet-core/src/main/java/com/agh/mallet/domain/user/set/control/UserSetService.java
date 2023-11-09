@@ -102,6 +102,7 @@ public class UserSetService {
 
         userEntity.getUserSets().add(setJPAEntity);
 
+        setRepository.save(setJPAEntity);
         userService.save(userEntity);
         return setJPAEntity.getId();
     }
