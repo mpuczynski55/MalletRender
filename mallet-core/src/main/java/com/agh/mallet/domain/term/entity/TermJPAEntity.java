@@ -32,7 +32,7 @@ public class TermJPAEntity {
     @Column(name = "TERM_DICTIONARY")
     private boolean isTermDictionary;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private TermJPAEntity translation;
 
     public TermJPAEntity() {}

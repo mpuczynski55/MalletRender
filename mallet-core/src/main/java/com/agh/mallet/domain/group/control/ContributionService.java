@@ -28,7 +28,6 @@ public class ContributionService {
         return contributionRepository.findAllById(ids);
     }
 
-
     private Supplier<MalletNotFoundException> supplyContributionNotFoundException(Long id) {
         return () -> {
             String message = MessageFormat.format(CONTRIBUTION_NOT_FOUND_ERROR_MSG, id);

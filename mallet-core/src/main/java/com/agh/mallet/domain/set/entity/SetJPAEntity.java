@@ -5,7 +5,6 @@ import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,7 +36,7 @@ public class SetJPAEntity {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "SETS_TERMS",
             joinColumns = @JoinColumn(name = "SET_ID"),
             inverseJoinColumns = @JoinColumn(name = "TERM_ID")
@@ -122,5 +122,9 @@ public class SetJPAEntity {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public void removeTerms(Collection<TermJPAEntity> terms){
+        this.getTerms().removeAll(terms);
     }
 }

@@ -11,14 +11,14 @@ import com.agh.api.GroupUpdateDTO;
 import com.agh.api.SetCreateDTO;
 import com.agh.api.TermCreateDTO;
 import com.agh.api.UserDTO;
+import com.agh.mallet.domain.group.entity.ContributionJPAEntity;
+import com.agh.mallet.domain.group.entity.GroupJPAEntity;
+import com.agh.mallet.domain.group.entity.PermissionType;
 import com.agh.mallet.domain.set.control.service.SetService;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 import com.agh.mallet.domain.term.control.repository.TermRepository;
 import com.agh.mallet.domain.term.entity.Language;
 import com.agh.mallet.domain.term.entity.TermJPAEntity;
-import com.agh.mallet.domain.group.entity.ContributionJPAEntity;
-import com.agh.mallet.domain.group.entity.GroupJPAEntity;
-import com.agh.mallet.domain.group.entity.PermissionType;
 import com.agh.mallet.domain.user.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
@@ -211,9 +211,11 @@ public class GroupService {
 
     public void delete(long id, String userEmail) {
         GroupJPAEntity groupEntity = getById(id);
+        UserJPAEntity user = userService.getByEmail(userEmail);
 
         UserContributionValidator.validateAdminRole(userEmail, groupEntity.getAdmin(), PERMISSION_REMOVE_GROUP_ERROR_MSG);
 
+        user.deleteUserGroup(groupEntity);
         groupRepository.delete(groupEntity);
     }
 
@@ -307,8 +309,7 @@ public class GroupService {
     }
 
     private List<TermJPAEntity> getTermsToCreate(SetCreateDTO setCreateDTO) {
-        return Optional.of(setCreateDTO.termsToCreate()).stream()
-                .flatMap(Collection::stream)
+        return setCreateDTO.termsToCreate().stream()
                 .map(this::toTermJPAEntity)
                 .toList();
     }

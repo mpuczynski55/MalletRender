@@ -31,7 +31,6 @@ public class GroupResource {
 
     private final GroupService groupService;
 
-
     public GroupResource(GroupService groupService) {
         this.groupService = groupService;
     }

@@ -135,6 +135,10 @@ public class UserJPAEntity {
         this.userGroups = userGroups;
     }
 
+    public void deleteUserGroup(GroupJPAEntity userGroup) {
+        getUserGroups().remove(userGroup);
+    }
+
     public void addUserGroup(GroupJPAEntity userGroups) {
         this.userGroups.add(userGroups);
     }
