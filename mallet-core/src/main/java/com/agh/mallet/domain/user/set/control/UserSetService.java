@@ -15,7 +15,9 @@ import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -35,9 +37,8 @@ public class UserSetService {
     private final NextChunkRebuilder nextChunkRebuilder;
     private final TermRepository termRepository;
     private final ObjectIdentifierProvider objectIdentifierProvider;
-    private final ObjectIdentifierProvider identifierProvider;
 
-    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider objectIdentifierProvider, ObjectIdentifierProvider identifierProvider) {
+    public UserSetService(UserService userService, SetService setService, SetRepository setRepository, UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder, TermRepository termRepository, ObjectIdentifierProvider objectIdentifierProvider) {
         this.userService = userService;
         this.setService = setService;
         this.setRepository = setRepository;
@@ -45,7 +46,6 @@ public class UserSetService {
         this.nextChunkRebuilder = nextChunkRebuilder;
         this.termRepository = termRepository;
         this.objectIdentifierProvider = objectIdentifierProvider;
-        this.identifierProvider = identifierProvider;
     }
 
     public SetBasicDTO get(int startPosition,
@@ -67,6 +67,7 @@ public class UserSetService {
         add(setEntity, userEntity);
     }
 
+    @Lock(LockModeType.WRITE)
     private void add(SetJPAEntity set, UserJPAEntity user) {
         String identifier = objectIdentifierProvider.fromSetName(set.getName());
 
@@ -93,9 +94,10 @@ public class UserSetService {
         userService.save(user);
     }
 
+    @Lock(LockModeType.WRITE)
     public Long create(SetCreateDTO setCreateDTO, String userEmail) {
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
-        String identifier = identifierProvider.fromSetName(setCreateDTO.topic());
+        String identifier = objectIdentifierProvider.fromSetName(setCreateDTO.topic());
 
         Set<TermJPAEntity> mergedTerms = getToCreateAndExistingTerms(setCreateDTO);
         SetJPAEntity setJPAEntity = new SetJPAEntity(setCreateDTO.topic(), setCreateDTO.description(), identifier, mergedTerms, userEntity);
@@ -104,6 +106,7 @@ public class UserSetService {
 
         setRepository.save(setJPAEntity);
         userService.save(userEntity);
+
         return setJPAEntity.getId();
     }
 

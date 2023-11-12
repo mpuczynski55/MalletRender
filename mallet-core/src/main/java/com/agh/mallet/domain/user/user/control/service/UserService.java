@@ -14,6 +14,8 @@ import com.agh.mallet.infrastructure.exception.ExceptionType;
 import com.agh.mallet.infrastructure.mapper.UserDTOMapper;
 import com.agh.mallet.infrastructure.mapper.UserInformationDTOMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +67,7 @@ public class UserService  {
         emailService.sendMail("Mallet account confirmation", email, EmailTemplateProvider.getEmailConfirmationTemplate(""));
     }
 
+    @Lock(LockModeType.WRITE)
     private UserJPAEntity mapToUserEntity(UserRegistrationDTO userInfo) {
         String encodedPassword = pbkdf2PasswordEncoder.encode(userInfo.password());
         String username = userInfo.username();

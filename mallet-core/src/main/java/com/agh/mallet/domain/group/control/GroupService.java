@@ -26,6 +26,8 @@ import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import com.agh.mallet.infrastructure.mapper.GroupDTOMapper;
 import com.agh.mallet.infrastructure.mapper.PermissionTypeMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -83,6 +85,7 @@ public class GroupService {
         return GroupDTOMapper.from(groupEntity);
     }
 
+    @Lock(LockModeType.WRITE)
     public Long create(GroupCreateDTO groupCreateDTO, String creatorEmail) {
         UserJPAEntity creator = userService.getByEmail(creatorEmail);
         String groupName = groupCreateDTO.name();
@@ -259,6 +262,7 @@ public class GroupService {
     }
 
 
+    @Lock(LockModeType.WRITE)
     public void addSet(GroupSetDTO groupSetDTO, String userEmail) {
         GroupJPAEntity groupEntity = getById(groupSetDTO.groupId());
         UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_ADD_SET_ERROR_MSG);
@@ -283,8 +287,10 @@ public class GroupService {
         groupRepository.save(groupEntity);
     }
 
+    @Lock(LockModeType.WRITE)
     public void createSet(GroupSetCreateDTO groupSetCreateDTO, String userEmail) {
         GroupJPAEntity groupEntity = getById(groupSetCreateDTO.groupId());
+        UserJPAEntity user = userService.getByEmail(userEmail);
 
         UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_ADD_SET_ERROR_MSG);
 
@@ -293,7 +299,7 @@ public class GroupService {
         String setTopic = set.topic();
         String setIdentifier = objectIdentifierProvider.fromSetName(setTopic);
 
-        SetJPAEntity setJPAEntity = new SetJPAEntity(setTopic, setIdentifier, set.description(), mergedTerms);
+        SetJPAEntity setJPAEntity = new SetJPAEntity(setTopic, setIdentifier, set.description(), mergedTerms, user);
 
         groupEntity.addSet(setJPAEntity);
 

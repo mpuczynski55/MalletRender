@@ -3,7 +3,6 @@ package com.agh.mallet.domain.user.group.contorl;
 import com.agh.api.GroupBasicDTO;
 import com.agh.mallet.domain.group.entity.GroupJPAEntity;
 import com.agh.mallet.domain.user.user.control.repository.UserRepository;
-import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.infrastructure.mapper.GroupBasicDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +13,10 @@ import java.util.List;
 @Service
 public class UserGroupService {
 
-    private final UserService userService;
     private final UserRepository userRepository;
     private final NextChunkRebuilder nextChunkRebuilder;
 
-    public UserGroupService(UserService userService, UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder) {
-        this.userService = userService;
+    public UserGroupService(UserRepository userRepository, NextChunkRebuilder nextChunkRebuilder) {
         this.userRepository = userRepository;
         this.nextChunkRebuilder = nextChunkRebuilder;
     }

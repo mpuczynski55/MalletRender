@@ -57,13 +57,6 @@ public class SetJPAEntity {
         addTerms(setJPAEntity.getTerms());
     }
 
-    public SetJPAEntity(String name, String identifier, String description, Set<TermJPAEntity> terms) {
-        this.name = name;
-        this.description = description;
-        this.identifier = identifier;
-        this.terms = terms;
-    }
-
     public UserJPAEntity getCreator() {
         return creator;
     }
