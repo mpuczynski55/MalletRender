@@ -52,7 +52,7 @@ public class UserJPAEntity {
             inverseJoinColumns = @JoinColumn(name = "KNOWN_TERM_ID"))
     private Set<TermJPAEntity> knownTerms = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "USERS_GROUPS",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "GROUP_ID"))

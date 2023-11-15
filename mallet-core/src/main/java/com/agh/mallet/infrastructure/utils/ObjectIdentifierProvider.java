@@ -19,18 +19,21 @@ public class ObjectIdentifierProvider {
         this.setRepository = setRepository;
     }
 
+   // @Lock(LockModeType.WRITE)
     public String fromUsername(String username){
         long userCount = userRepository.countAllByUsername(username);
 
         return trimWhitespaces(username + HASHTAG + userCount);
     }
 
+  //  @Lock(LockModeType.WRITE)
     public String fromGroupName(String groupName){
         long userCount = groupRepository.countAllByName(groupName);
 
         return trimWhitespaces(groupName + HASHTAG + userCount);
     }
 
+   // @Lock(LockModeType.WRITE)
     public String fromSetName(String setName) {
         long userCount = setRepository.countAllByName(setName);
 
