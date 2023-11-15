@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<UserJPAEntity, Long>, JpaS
 
     long countAllByUsername(String username);
 
-    List<UserJPAEntity> findAllByUsernameContainingIgnoreCase(String username);
+    List<UserJPAEntity> findAllByUsernameContainingIgnoreCaseAndEnabled(String username, boolean enabled);
 
     @Query("SELECT s FROM SetJPAEntity s WHERE s.creator.email = ?1")
     Page<SetJPAEntity> findAllSetsByUserEmail(String email, Pageable pageable);

@@ -112,7 +112,7 @@ public class UserService  {
             return Collections.emptyList();
         }
 
-        List<UserJPAEntity> users = userRepository.findAllByUsernameContainingIgnoreCase(username);
+        List<UserJPAEntity> users = userRepository.findAllByUsernameContainingIgnoreCaseAndEnabled(username, true);
 
         return UserDTOMapper.from(users);
     }

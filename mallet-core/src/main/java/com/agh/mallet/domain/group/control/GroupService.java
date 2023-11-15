@@ -26,7 +26,6 @@ import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import com.agh.mallet.infrastructure.mapper.GroupDTOMapper;
 import com.agh.mallet.infrastructure.mapper.PermissionTypeMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -116,7 +115,7 @@ public class GroupService {
     }
 
     private ContributionJPAEntity getCreatorContribution(UserJPAEntity creator) {
-        return new ContributionJPAEntity(PermissionType.READ_WRITE, PermissionType.READ_WRITE, creator);
+        return new ContributionJPAEntity(PermissionType.ADMIN, PermissionType.ADMIN, creator);
     }
 
     private Set<ContributionJPAEntity> toContributionJPAEntities(Collection<ContributionDTO> contributionDTOS, List<UserJPAEntity> contributors) {
@@ -144,16 +143,16 @@ public class GroupService {
         UserContributionValidator.validateUserGroupEditPermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
 
         List<ContributionDTO> contributions = getContributionsWithoutAdmin(groupUpdateDTO, groupEntity);
-        Set<ContributionDTO> contributionsToCreate = getContributionsToCreate(contributions);
+     //   Set<ContributionDTO> contributionsToCreate = getContributionsToCreate(contributions);
         Set<ContributionDTO> contributionsToUpdate = getContributionsToUpdate(contributions);
 
         List<UserJPAEntity> existingContributors = userRepository.findAllById(extractContributorIds(contributions));
-        Set<ContributionJPAEntity> contributionEntitiesToCreate = toContributionJPAEntities(contributionsToCreate, existingContributors);
+        //Set<ContributionJPAEntity> contributionEntitiesToCreate = toContributionJPAEntities(contributionsToCreate, existingContributors);
 
         Set<ContributionJPAEntity> existingContributions = groupEntity.getContributions();
         updateContributions(contributionsToUpdate, existingContributions);
 
-        existingContributions.addAll(contributionEntitiesToCreate);
+      //  existingContributions.addAll(contributionEntitiesToCreate);
 
         groupRepository.save(groupEntity);
     }
