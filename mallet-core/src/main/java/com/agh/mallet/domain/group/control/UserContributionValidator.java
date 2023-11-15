@@ -22,7 +22,7 @@ public class UserContributionValidator {
         UserJPAEntity groupAdmin = groupEntity.getAdmin();
         ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
 
-        if (!groupAdmin.getEmail().equals(userEmail) || !PermissionType.READ_WRITE.equals(requesterContribution.getSetPermissionType())) {
+        if (!groupAdmin.getEmail().equals(userEmail) || PermissionType.READ.equals(requesterContribution.getGroupPermissionType())) {
             throw new MalletForbiddenException(validationErrorMessage);
         }
     }
@@ -33,7 +33,7 @@ public class UserContributionValidator {
         UserJPAEntity groupAdmin = groupEntity.getAdmin();
         ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
 
-        if (!groupAdmin.getEmail().equals(userEmail) || !PermissionType.READ_WRITE.equals(requesterContribution.getGroupPermissionType())) {
+        if (!groupAdmin.getEmail().equals(userEmail) || PermissionType.READ.equals(requesterContribution.getGroupPermissionType())) {
             throw new MalletForbiddenException(validationErrorMessage);
         }
     }

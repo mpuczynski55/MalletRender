@@ -143,16 +143,10 @@ public class GroupService {
         UserContributionValidator.validateUserGroupEditPermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
 
         List<ContributionDTO> contributions = getContributionsWithoutAdmin(groupUpdateDTO, groupEntity);
-     //   Set<ContributionDTO> contributionsToCreate = getContributionsToCreate(contributions);
         Set<ContributionDTO> contributionsToUpdate = getContributionsToUpdate(contributions);
-
-        List<UserJPAEntity> existingContributors = userRepository.findAllById(extractContributorIds(contributions));
-        //Set<ContributionJPAEntity> contributionEntitiesToCreate = toContributionJPAEntities(contributionsToCreate, existingContributors);
 
         Set<ContributionJPAEntity> existingContributions = groupEntity.getContributions();
         updateContributions(contributionsToUpdate, existingContributions);
-
-      //  existingContributions.addAll(contributionEntitiesToCreate);
 
         groupRepository.save(groupEntity);
     }

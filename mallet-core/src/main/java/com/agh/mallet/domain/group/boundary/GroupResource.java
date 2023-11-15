@@ -73,7 +73,7 @@ public class GroupResource {
             summary = "Delete group's contributions",
             description = "Delete group's contributions providing contributor ids. Only admin (owner) of the group can perform this operation"
     )
-    @DeleteMapping(path = "contribution")
+    @PutMapping(path = "/contribution/delete")
     public ResponseEntity<Object> deleteContributions(@RequestBody GroupContributionDeleteDTO contributionDeleteDTO, Principal principal) {
         groupService.deleteContributions(contributionDeleteDTO, principal.getName());
 
