@@ -92,6 +92,7 @@ public class UserSetService {
         userService.save(user);
     }
 
+    @Transactional
     public Long create(SetCreateDTO setCreateDTO, String userEmail) {
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
         String identifier = objectIdentifierProvider.fromSetName(setCreateDTO.topic());

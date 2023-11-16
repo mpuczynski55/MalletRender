@@ -26,6 +26,7 @@ import com.agh.mallet.infrastructure.exception.MalletNotFoundException;
 import com.agh.mallet.infrastructure.mapper.GroupDTOMapper;
 import com.agh.mallet.infrastructure.mapper.PermissionTypeMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -83,6 +84,7 @@ public class GroupService {
         return GroupDTOMapper.from(groupEntity);
     }
 
+    @Transactional
     public Long create(GroupCreateDTO groupCreateDTO, String creatorEmail) {
         UserJPAEntity creator = userService.getByEmail(creatorEmail);
         String groupName = groupCreateDTO.name();
@@ -275,9 +277,9 @@ public class GroupService {
         groupRepository.save(groupEntity);
     }
 
+    @Transactional
     public void createSet(GroupSetCreateDTO groupSetCreateDTO, String userEmail) {
         GroupJPAEntity groupEntity = getById(groupSetCreateDTO.groupId());
-        UserJPAEntity user = userService.getByEmail(userEmail);
 
         UserContributionValidator.validateUserSetEditPermission(userEmail, groupEntity, PERMISSION_ADD_SET_ERROR_MSG);
 
@@ -286,10 +288,9 @@ public class GroupService {
         String setTopic = set.topic();
         String setIdentifier = objectIdentifierProvider.fromSetName(setTopic);
 
-        SetJPAEntity setJPAEntity = new SetJPAEntity(setTopic, setIdentifier, set.description(), mergedTerms, user);
+        SetJPAEntity setJPAEntity = new SetJPAEntity(setTopic, setIdentifier, set.description(), mergedTerms);
 
         groupEntity.addSet(setJPAEntity);
-
         groupRepository.save(groupEntity);
     }
 

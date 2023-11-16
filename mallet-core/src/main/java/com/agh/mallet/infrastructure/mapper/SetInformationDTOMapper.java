@@ -1,11 +1,12 @@
 package com.agh.mallet.infrastructure.mapper;
 
-import com.agh.api.UserDTO;
 import com.agh.api.SetInformationDTO;
+import com.agh.api.UserDTO;
 import com.agh.mallet.domain.set.entity.SetJPAEntity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class SetInformationDTOMapper {
 
@@ -18,7 +19,10 @@ public class SetInformationDTOMapper {
     }
 
     public static SetInformationDTO from(SetJPAEntity set) {
-        UserDTO creator = UserDTOMapper.from(set.getCreator());
+        UserDTO creator = null;
+        if(Objects.nonNull(set.getCreator())){
+            creator = UserDTOMapper.from(set.getCreator());
+        }
 
         return SetInformationDTO.builder()
                 .id(set.getId())

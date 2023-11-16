@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<UserJPAEntity, Long>, JpaS
 
     List<UserJPAEntity> findAllByUsernameContainingIgnoreCaseAndEnabled(String username, boolean enabled);
 
-    @Query("SELECT s FROM SetJPAEntity s WHERE s.creator.email = ?1")
+    @Query("SELECT s FROM UserJPAEntity u INNER JOIN u.userSets s WHERE u.email = ?1")
     Page<SetJPAEntity> findAllSetsByUserEmail(String email, Pageable pageable);
 
     @Query("SELECT DISTINCT g FROM GroupJPAEntity g JOIN g.contributions c JOIN c.contributor u WHERE u.email = ?1")
