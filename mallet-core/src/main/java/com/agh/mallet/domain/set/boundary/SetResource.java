@@ -43,8 +43,9 @@ public class SetResource {
                                                  @RequestParam(name = "topic", required = false) String topic,
                                                  @RequestParam(name = "startPosition", defaultValue = "0") int startPosition,
                                                  @RequestParam(name = "limit", defaultValue = "10") int limit,
-                                                 @RequestParam(name = "language", required = false, defaultValue = "EN") String primaryLanguage) {
-        SetBasicDTO setBasicDTO = setService.getBasics(ids, topic, startPosition, limit, primaryLanguage);
+                                                 @RequestParam(name = "language", required = false, defaultValue = "EN") String primaryLanguage,
+                                                 @RequestParam(name = "predefined", defaultValue = "false") boolean predefined) {
+        SetBasicDTO setBasicDTO = setService.getBasics(ids, topic, startPosition, limit, primaryLanguage,predefined);
 
         return new ResponseEntity<>(setBasicDTO, HttpStatus.OK);
     }

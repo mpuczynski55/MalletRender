@@ -36,6 +36,9 @@ public class SetJPAEntity {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "PREDEFINED")
+    private boolean isPredefined;
+
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "SETS_TERMS",
             joinColumns = @JoinColumn(name = "SET_ID"),
@@ -125,5 +128,13 @@ public class SetJPAEntity {
 
     public void removeTerms(Collection<TermJPAEntity> terms){
         this.getTerms().removeAll(terms);
+    }
+
+    public boolean isPredefined() {
+        return isPredefined;
+    }
+
+    public void setPredefined(boolean predefined) {
+        isPredefined = predefined;
     }
 }

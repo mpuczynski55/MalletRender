@@ -23,5 +23,7 @@ public interface SetRepository extends JpaRepository<SetJPAEntity, Long>, JpaSpe
 
     long countAllByName(String name);
 
+    Page<SetJPAEntity> findAllByPredefined(boolean predefined, Pageable pageable);
+
 
 }

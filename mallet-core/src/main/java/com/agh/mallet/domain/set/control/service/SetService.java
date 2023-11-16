@@ -81,7 +81,11 @@ public class SetService {
                                  String topic,
                                  int startPosition,
                                  int limit,
-                                 String primaryLanguage) {
+                                 String primaryLanguage,
+                                 boolean predefined) {
+        if(predefined){
+            return getPredefined(startPosition, limit);
+        }
         if (Objects.nonNull(ids)) {
             return getBasics(ids);
         }
@@ -105,6 +109,21 @@ public class SetService {
         return SetBasicsDTOMapper.from(sets, nextChunkUri);
     }
 
+    private SetBasicDTO getPredefined(      int startPosition,
+                                            int limit) {
+        if (limit > 30) {
+            limit = 30;
+        }
+        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+
+        List<SetJPAEntity> sets = setRepository.findAllByPredefined(true, pageRequest)
+                .getContent();
+
+        String nextChunkUri = nextChunkRebuilder.rebuild(sets, startPosition, limit);
+
+        return SetBasicsDTOMapper.from(sets, nextChunkUri);
+    }
+
     public SetJPAEntity getById(long id) {
         return setRepository.findById(id)
                 .orElseThrow(supplySetNotFoundException(id));
@@ -114,7 +133,6 @@ public class SetService {
         String message = MessageFormat.format(SET_NOT_FOUND_ERROR_MSG, setId);
         return () -> new MalletNotFoundException(message);
     }
-
 
     public void syncSet(SetUpdateDTO setUpdateDTO, String userEmail) {
         SetJPAEntity setEntity = getById(setUpdateDTO.id());
