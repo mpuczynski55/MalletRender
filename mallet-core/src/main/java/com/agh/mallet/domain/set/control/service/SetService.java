@@ -116,7 +116,7 @@ public class SetService {
         }
         PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
 
-        List<SetJPAEntity> sets = setRepository.findAllByPredefined(true, pageRequest)
+        List<SetJPAEntity> sets = setRepository.findAllPredefined(pageRequest)
                 .getContent();
 
         String nextChunkUri = nextChunkRebuilder.rebuild(sets, startPosition, limit);
