@@ -66,7 +66,7 @@ public class SetService {
         if (limit > 30) {
             limit = 30;
         }
-        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+        PageRequest pageRequest = PageRequest.of(startPosition,  limit);
         Language language = Language.from(primaryLanguage);
 
         List<TermJPAEntity> terms = setRepository.findAllTermsBySetIdAndLanguage(setId, language, pageRequest)
@@ -98,7 +98,7 @@ public class SetService {
             limit = 10;
         }
 
-        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+        PageRequest pageRequest = PageRequest.of(startPosition,  limit);
         Language language = Language.from(primaryLanguage);
 
         List<SetJPAEntity> sets = setRepository.findAllByTermsLanguage(language, pageRequest)
@@ -114,7 +114,7 @@ public class SetService {
         if (limit > 30) {
             limit = 30;
         }
-        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+        PageRequest pageRequest = PageRequest.of(startPosition,  limit);
 
         List<SetJPAEntity> sets = setRepository.findAllPredefined(pageRequest)
                 .getContent();

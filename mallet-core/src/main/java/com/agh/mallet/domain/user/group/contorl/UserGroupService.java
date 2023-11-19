@@ -25,7 +25,7 @@ public class UserGroupService {
                              int limit,
                              String userEmail) {
 
-        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+        PageRequest pageRequest = PageRequest.of(startPosition,  limit);
         List<GroupJPAEntity> userGroups = userRepository.findAllGroupsByUserEmail(userEmail, pageRequest)
                 .getContent();
 

@@ -24,7 +24,7 @@ public class TermService {
     public TermBasicListDTO getByTerm(String term,
                                       int startPosition,
                                       int limit) {
-        PageRequest pageRequest = PageRequest.of(startPosition, startPosition + limit);
+        PageRequest pageRequest = PageRequest.of(startPosition,  limit);
 
         List<TermJPAEntity> terms = termRepository.findAllByTerm(term, pageRequest)
                 .getContent();
