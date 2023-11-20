@@ -61,6 +61,7 @@ public class GroupService {
     private final ContributionService contributionService;
     private final SetService setService;
     private final TermRepository termRepository;
+    private final ContributionRepository contributionRepository;
 
     public GroupService(UserService userService,
                         UserRepository userRepository,
@@ -68,7 +69,8 @@ public class GroupService {
                         ObjectIdentifierProvider objectIdentifierProvider,
                         ContributionService contributionService,
                         TermRepository termRepository,
-                        SetService setService) {
+                        SetService setService,
+                        ContributionRepository contributionRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
@@ -76,6 +78,7 @@ public class GroupService {
         this.contributionService = contributionService;
         this.termRepository = termRepository;
         this.setService = setService;
+        this.contributionRepository = contributionRepository;
     }
 
     public GroupDTO get(long id) {
@@ -146,9 +149,18 @@ public class GroupService {
 
         List<ContributionDTO> contributions = getContributionsWithoutAdmin(groupUpdateDTO, groupEntity);
         Set<ContributionDTO> contributionsToUpdate = getContributionsToUpdate(contributions);
+        Set<ContributionDTO> contributionsToCreate = getContributionsToCreate(contributions);
+        Set<Long> contributorIds = contributionsToCreate.stream()
+                .map(s -> s.contributor().id())
+                .collect(Collectors.toSet());
+        List<UserJPAEntity> contributors = userRepository.findAllById(contributorIds);
+        Set<ContributionJPAEntity> contributionJPAEntities = toContributionJPAEntities(contributionsToCreate, contributors);
 
         Set<ContributionJPAEntity> existingContributions = groupEntity.getContributions();
+        existingContributions.addAll(contributionJPAEntities);
         updateContributions(contributionsToUpdate, existingContributions);
+
+        contributionRepository.saveAll(existingContributions);
 
         groupRepository.save(groupEntity);
     }

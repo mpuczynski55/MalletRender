@@ -88,8 +88,8 @@ public class UserSetService {
     private void remove(SetJPAEntity set,
                         UserJPAEntity user) {
         user.removeUserSet(set);
-
         userService.save(user);
+        termRepository.deleteAll(set.getTerms());
     }
 
     @Transactional

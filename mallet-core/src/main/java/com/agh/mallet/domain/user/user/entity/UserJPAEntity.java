@@ -46,7 +46,7 @@ public class UserJPAEntity {
 
     @Column(name = "ENABLED")
     private Boolean enabled = false;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH} )
     @JoinTable(name = "USERS_KNOWN_TERMS",
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "KNOWN_TERM_ID"))

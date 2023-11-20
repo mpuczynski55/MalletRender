@@ -4,6 +4,7 @@ import com.agh.api.UserDTO;
 import com.agh.api.UserDetailDTO;
 import com.agh.api.UserLogInDTO;
 import com.agh.api.UserRegistrationDTO;
+import com.agh.mallet.domain.group.control.ContributionRepository;
 import com.agh.mallet.domain.user.user.control.exception.MalletUserException;
 import com.agh.mallet.domain.user.user.control.repository.UserRepository;
 import com.agh.mallet.domain.user.user.control.utils.EmailTemplateProvider;
@@ -37,14 +38,16 @@ public class UserService  {
     private final EmailService emailService;
     private final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder;
     private final ObjectIdentifierProvider objectIdentifierProvider;
+    private final ContributionRepository contributionRepository;
 
-    public UserService(UserRepository userRepository, UserValidator userValidator, ConfirmationTokenService confirmationTokenService, EmailService emailService, Pbkdf2PasswordEncoder pbkdf2PasswordEncoder, ObjectIdentifierProvider objectIdentifierProvider) {
+    public UserService(UserRepository userRepository, UserValidator userValidator, ConfirmationTokenService confirmationTokenService, EmailService emailService, Pbkdf2PasswordEncoder pbkdf2PasswordEncoder, ObjectIdentifierProvider objectIdentifierProvider, ContributionRepository contributionRepository) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.confirmationTokenService = confirmationTokenService;
         this.emailService = emailService;
         this.pbkdf2PasswordEncoder = pbkdf2PasswordEncoder;
         this.objectIdentifierProvider = objectIdentifierProvider;
+        this.contributionRepository = contributionRepository;
     }
 
     public void signUp(UserRegistrationDTO userInfo) {
@@ -115,5 +118,17 @@ public class UserService  {
         List<UserJPAEntity> users = userRepository.findAllByUsernameContainingIgnoreCaseAndEnabled(username, true);
 
         return UserDTOMapper.from(users);
+    }
+
+    public void delete(long id, String email){
+        UserJPAEntity user = userRepository.findById(id)
+                .orElseThrow(throwUserNotFoundException(String.valueOf(id)));
+
+        if(!user.getEmail().equals(email)){
+            throw new MalletUserException("Cannot perform this operatio", ExceptionType.FORBIDDEN);
+        }
+
+        userRepository.delete(user);
+        contributionRepository.deleteAllByContributor(user);
     }
 }
