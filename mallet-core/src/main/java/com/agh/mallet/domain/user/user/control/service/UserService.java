@@ -15,6 +15,7 @@ import com.agh.mallet.infrastructure.exception.ExceptionType;
 import com.agh.mallet.infrastructure.mapper.UserDTOMapper;
 import com.agh.mallet.infrastructure.mapper.UserInformationDTOMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -120,15 +121,24 @@ public class UserService  {
         return UserDTOMapper.from(users);
     }
 
+    @Transactional
     public void delete(long id, String email){
         UserJPAEntity user = userRepository.findById(id)
                 .orElseThrow(throwUserNotFoundException(String.valueOf(id)));
 
         if(!user.getEmail().equals(email)){
-            throw new MalletUserException("Cannot perform this operatio", ExceptionType.FORBIDDEN);
+            throw new MalletUserException("Cannot perform this operation", ExceptionType.FORBIDDEN);
         }
 
-        userRepository.delete(user);
+       long countOfAdminGroups = user.getUserGroups().stream()
+                .filter(s -> s.getAdmin().equals(user))
+                .count();
+
+        if(countOfAdminGroups > 0){
+            throw new MalletUserException("Cannot perform this operation.", ExceptionType.FORBIDDEN);
+        }
+
         contributionRepository.deleteAllByContributor(user);
+        userRepository.delete(user);
     }
 }
