@@ -51,7 +51,7 @@ public class SecurityConfig {
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getRequestsCustomizer() {
         return auth -> auth.requestMatchers("/user/login").permitAll()
-                .requestMatchers("/user/registration").permitAll()
+                .requestMatchers("/user/registration/**").permitAll()
                 .anyRequest().authenticated();
     }
 

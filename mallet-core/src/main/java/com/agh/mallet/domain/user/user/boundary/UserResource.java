@@ -6,6 +6,7 @@ import com.agh.api.UserLogInDTO;
 import com.agh.api.UserRegistrationDTO;
 import com.agh.mallet.domain.user.user.control.service.ConfirmationTokenService;
 import com.agh.mallet.domain.user.user.control.service.UserService;
+import com.agh.mallet.domain.user.user.control.utils.EmailTemplateProvider;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,11 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -54,14 +53,11 @@ public class UserResource {
     }
 
     @Hidden
-    @PutMapping(EMAIL_CONFIRMATION_PATH)
-    @ResponseBody
-    public void confirm(@RequestParam("token") String token) {
+    @GetMapping(value = EMAIL_CONFIRMATION_PATH, produces = MediaType.TEXT_HTML_VALUE)
+    public String confirm(@RequestParam("token") String token) {
         confirmationTokenService.confirmToken(token);
 
-        //TODO ZWRACANIE HTMLA
-      /*  modelAndView.setViewName("accountConfirmed");
-        return modelAndView;*/
+        return EmailTemplateProvider.getEmailConfirmedTemplate();
     }
 
     @Operation(

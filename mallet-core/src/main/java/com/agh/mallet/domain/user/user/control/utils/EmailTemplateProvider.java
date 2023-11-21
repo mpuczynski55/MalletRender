@@ -2,136 +2,140 @@ package com.agh.mallet.domain.user.user.control.utils;
 
 public class EmailTemplateProvider {
 
+    private EmailTemplateProvider() {}
+
     public static String getEmailConfirmationTemplate(String confirmationLink) {
-        return "<html xmlns:th=\"https://www.thymeleaf.org/\" lang=\"pl\">\n" +
+        return "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
                 "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>MALLet - Email Confirmation</title>\n" +
+                "    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Russo+One\">\n" +
+                "      <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=REM\">\n" +
                 "    <style>\n" +
-                "        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap');\n" +
-                "\n" +
                 "        body {\n" +
-                "            background-color: #83CEE5;\n" +
-                "            font-family: 'Fredoka One', sans-serif;\n" +
+                "            font-family: \"REM\", sans-serif;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "            background-color: #e5f1f9;\n" +
                 "        }\n" +
                 "\n" +
-                "        .blue-background {\n" +
-                "            background-color: #00b5d8;\n" +
+                "        .container {\n" +
                 "            width: 100%;\n" +
-                "            height: 200px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .mail-body {\n" +
-                "            border-radius: 20px;\n" +
-                "            background-color: #FFFFFF;\n" +
-                "            max-width: 600px;\n" +
-                "            line-height: 20px;\n" +
-                "            margin: -200px auto;\n" +
-                "            margin-bottom: 50px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .mail-body .welcome {\n" +
-                "            font-weight: 500;\n" +
-                "            font-size: 50px;\n" +
-                "            text-align: center;\n" +
-                "            font-family: \"Fredoka One\", sans-serif;\n" +
-                "            margin-top: 110px;\n" +
-                "            padding-top: 50px;\n" +
-                "            margin-bottom: 60px;\n" +
-                "        }\n" +
-                "\n" +
-                "        p,\n" +
-                "        .link {\n" +
                 "            max-width: 600px;\n" +
                 "            margin: 0 auto;\n" +
-                "            margin-bottom: 40px;\n" +
-                "            padding: 0 30px;\n" +
-                "            font-weight: 300;\n" +
+                "            background-color: #ffffff;\n" +
+                "            padding: 30px;\n" +
+                "            box-sizing: border-box;\n" +
+                "            border: 2px solid #2e4780;\n" +
+                "            border-radius: 10px;\n" +
+                "            margin-top: 30px;\n" +
                 "        }\n" +
                 "\n" +
-                "        .cta-button {\n" +
-                "            background-color: #00b5d8;\n" +
-                "            color: white;\n" +
-                "            border-radius: 20px;\n" +
-                "            text-decoration: none;\n" +
-                "            display: block;\n" +
-                "            margin-left: 25%;\n" +
-                "            margin-right: 25%;\n" +
-                "            padding: 15px;\n" +
+                "        h1 {\n" +
+                "      font-family: \"Russo One\", sans-serif;\n" +
+                "            color: #2e4780;\n" +
+                "      font-size:60px;\n" +
                 "            text-align: center;\n" +
-                "            font-family: \"Open Sans Bold\", sans-serif;\n" +
-                "            margin-bottom: 40px;\n" +
-                "\n" +
                 "        }\n" +
                 "\n" +
-                "        .link {\n" +
+                "        p {\n" +
+                "            color: #5493d2;\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
+                "\n" +
+                "        .button-container {\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
+                "\n" +
+                "        .button {\n" +
+                "            display: inline-block;\n" +
+                "            padding: 20px 20px;\n" +
+                "            text-align: center;\n" +
+                "            text-decoration: none;\n" +
+                "            color: #ffffff;\n" +
+                "            background-color: #5493d2;\n" +
+                "            border-radius: 5px;\n" +
+                "            margin-top: 20px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .alternate-link {\n" +
+                "            margin-top: 20px;\n" +
+                "            color: #2e4780;\n" +
+                "            text-decoration: underline;\n" +
                 "            display: block;\n" +
-                "            color: #00b5d8;\n" +
-                "            font-weight: 500;\n" +
-                "        }\n" +
-                "\n" +
-                "        .signature {\n" +
-                "            padding-bottom: 5px;\n" +
-                "        }\n" +
-                "\n" +
-                "\n" +
-                "        .aligncenter {\n" +
                 "            text-align: center;\n" +
                 "        }\n" +
                 "    </style>\n" +
                 "</head>\n" +
-                "\n" +
                 "<body>\n" +
-                "\n" +
-                "<div class=\"main\">\n" +
-                "    <div class=\"blue-background\"></div>\n" +
-                "\n" +
-                "    <div class=\"mail-body\">\n" +
-                "        <p class=\"welcome\">Welcome to Sanguage!</p>\n" +
-                "        <p class=\"aligncenter\">\n" +
-                "            <a href=\"https://imgbb.com/\"><img src=\"https://i.ibb.co/qrs04J9/mascot.png\" alt=\"mascot\" width=\"100\" height=\"100\" style=\"align:center\"></a>\n" +
-                "        </p>\n" +
-                "        <p>Click below to confirm your account:</p>\n" +
-                "        <a class=\"cta-button\" href=\"#\" th:href=\"@{__${link}__}\">Confirm Account </a>\n" +
-                "        <p>If that doesn't work, copy and paste the following link in your browser:</p>\n" +
-                "        <a class=\"link\" href=\"#\" th:href=\"@{__${link}__}\" th:text=\"${link}\">\n" +
-                "        </a>\n" +
-                "        <p class=\"signature\"></p>\n" +
+                "    <div class=\"container\">\n" +
+                "        <h1>MALLet</h1>\n" +
+                "        <p>Thank you for signing up to MALLet!</p>\n" +
+                "        <p>Please click the button below to confirm your email address.</p>\n" +
+                "        <div class=\"button-container\">\n" +
+                "            <a href=\"" +
+                confirmationLink + "\"" +
+                "class=\"button\">Confirm Email</a>\n" +
+                "        </div>\n" +
+                "        <p style=\"margin-top:30px\"ł>If the button does not work, you can also click the following link:</p>\n" +
+                "        <a href=\"YOUR_CONFIRMATION_LINK\" class=\"alternate-link\">link</a>\n" +
                 "    </div>\n" +
-                "</div>\n" +
                 "</body>\n" +
-                "</html>";
+                "</html>\n";
     }
 
     public static String getEmailConfirmedTemplate() {
-        return "<div style=\"margin: 0; padding: 0; font-family:'sans-serif';color:#6e6e6e;\">\n" +
-                "  <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
-                "    <tr>\n" +
-                "      <td>\n" +
-                "        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"600\" style=\"border-collapse: collapse;\">\n" +
-                "          <tr>\n" +
-                "            <td align=\"center\" bgcolor=\"#00b5d8\" style=\"padding: 30px 0 0px 30px;color: #ffffff;font-weight: 700;font-size:50px; font-family:sans-serif;\">\n" +
-                "              Sanguage\n" +
-                "            </td>\n" +
-                "            <tr>\n" +
-                "            <td align=\"center\" bgcolor=\"#00b5d8\" style=\"padding: 0 0 30px 30px;color: #ffffff;font-weight: 700;font-size:13px; font-family:sans-serif;\">\n" +
-                "              WITH ALL THE BASIC INGREDIENTS\n" +
-                "              </td></tr>\n" +
-                "          </tr>\n" +
-                "          <tr>\n" +
-                "            <td bgcolor=\"#83CEE5\" style=\"padding: 40px 30px 40px 30px;\">\n" +
-                "              <!-- content area -->\n" +
-                "              <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
-                "                <tr>\n" +
-                "                  <td align=\"center\">\n" +
-                "                    <a href=\"https://imgbb.com/\"><img src=\"https://i.ibb.co/qrs04J9/mascot.png\" width=150 height=150 alt=\"mascot\" border=\"0\"></a>\n" +
-                "                  </td>\n" +
-                "                </tr>\n" +
-                "                <tr>\n" +
-                "                  <td style=\"padding: 50px 0 0px 0px;color: #ffffff;font-weight: 700;font-size:24px;font-family:sans-serif;\">\n" +
-                "                    Thank you for joining Sanguage! You can now start learning!\n" +
-                "                  </td>\n" +
-                "                </tr>\n" +
-                "              \n" +
+        return "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>MALLet - Email Confirmation</title>\n" +
+                "    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Russo+One\">\n" +
+                "    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=REM\">\n" +
+                "    <style>\n" +
+                "        body {\n" +
+                "            font-family: \"REM\", sans-serif;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "            background-color: #e5f1f9;\n" +
+                "        }\n" +
                 "\n" +
-                "                </body>";
+                "        .container {\n" +
+                "            width: 100%;\n" +
+                "            max-width: 600px;\n" +
+                "            margin: 0 auto;\n" +
+                "            background-color: #ffffff;\n" +
+                "            padding: 30px;\n" +
+                "            box-sizing: border-box;\n" +
+                "            border: 2px solid #2e4780;\n" +
+                "            border-radius: 10px;\n" +
+                "            margin-top: 30px;\n" +
+                "        }\n" +
+                "\n" +
+                "        h1 {\n" +
+                "            font-family: \"Russo One\", sans-serif;\n" +
+                "            color: #2e4780;\n" +
+                "            font-size: 60px;\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
+                "\n" +
+                "        p {\n" +
+                "            color: #5493d2;\n" +
+                "      font-size:20px;\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <div class=\"container\">\n" +
+                "        <h1>MALLet</h1>\n" +
+                "      <p>Thank you for joining MALLet!</p>\n" +
+                "      <p>You can now start learning!</p>\n" +
+                "    </div>\n" +
+                "</body>\n" +
+                "</html>\n";
     }
 }

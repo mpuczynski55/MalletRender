@@ -52,4 +52,7 @@ public class ConfirmationTokenJPAEntity {
         return user;
     }
 
+    public String getToken() {
+        return token;
+    }
 }

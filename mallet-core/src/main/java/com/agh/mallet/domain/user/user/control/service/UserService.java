@@ -16,9 +16,11 @@ import com.agh.mallet.infrastructure.mapper.UserDTOMapper;
 import com.agh.mallet.infrastructure.mapper.UserInformationDTOMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -51,6 +53,7 @@ public class UserService  {
         this.contributionRepository = contributionRepository;
     }
 
+    @SneakyThrows
     public void signUp(UserRegistrationDTO userInfo) {
         String email = userInfo.email();
         userValidator.validateEmail(email);
@@ -63,8 +66,9 @@ public class UserService  {
 
         ConfirmationTokenJPAEntity confirmationToken = confirmationTokenService.save(user);
 
-        //todo confirmation link
-        emailService.sendMail("Mallet account confirmation", email, EmailTemplateProvider.getEmailConfirmationTemplate(""));
+        String confirmationURL = "http://" +  InetAddress.getLocalHost().getHostAddress() + ":8080/user/registration/confirm?token=" + confirmationToken.getToken();
+
+        emailService.sendMail("Mallet account confirmation", email, EmailTemplateProvider.getEmailConfirmationTemplate(confirmationURL));
     }
 
     private UserJPAEntity mapToUserEntity(UserRegistrationDTO userInfo) {
