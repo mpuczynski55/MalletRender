@@ -1,0 +1,15 @@
+
+i
+java:S1128"LRemove this unused import 'com.fasterxml.jackson.annotation.JsonAutoDetect'.(¾àÒ8ÖÔ¿¶1
+j
+java:S1128"HRemove this unused import 'com.fasterxml.jackson.annotation.JsonFormat'.(ıÙè‹øÿÿÿÿ8ÖÔ¿¶1
+g
+java:S1128"JRemove this unused import 'com.fasterxml.jackson.annotation.JsonProperty'.(ËÃ§Ï8ÖÔ¿¶1
+x
+java:S1128"VRemove this unused import 'com.fasterxml.jackson.databind.annotation.JsonDeserialize'.(Úˆ×øÿÿÿÿ8»ÔÛ¿¶1
+v
+java:S1128"TRemove this unused import 'com.fasterxml.jackson.databind.annotation.JsonSerialize'.(ÖÎèöúÿÿÿÿ8×Ô¿¶1
+{
+java:S1128"^Remove this unused import 'com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer'.(¯õ…á8¼ÔÛ¿¶1
+w
+java:S1128	"ZRemove this unused import 'com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer'.(‡ŞŞå8×Ô¿¶1
