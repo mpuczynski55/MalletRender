@@ -15,8 +15,10 @@ import com.agh.mallet.infrastructure.exception.ExceptionType;
 import com.agh.mallet.infrastructure.mapper.UserDTOMapper;
 import com.agh.mallet.infrastructure.mapper.UserInformationDTOMapper;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,11 +68,12 @@ public class UserService  {
 
         ConfirmationTokenJPAEntity confirmationToken = confirmationTokenService.save(user);
 
-        String confirmationURL = "http://" +  InetAddress.getLocalHost().getHostAddress() + ":8080/user/registration/confirm?token=" + confirmationToken.getToken();
+        String confirmationURL = "https://" +  InetAddress.getLocalHost().getHostAddress() + "/user/registration/confirm?token=" + confirmationToken.getToken();
 
         emailService.sendMail("Mallet account confirmation", email, EmailTemplateProvider.getEmailConfirmationTemplate(confirmationURL));
     }
 
+    @Lock(LockModeType.WRITE)
     private UserJPAEntity mapToUserEntity(UserRegistrationDTO userInfo) {
         String encodedPassword = pbkdf2PasswordEncoder.encode(userInfo.password());
         String username = userInfo.username();

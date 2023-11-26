@@ -77,10 +77,7 @@ public class ContributionJPAEntity {
         if (!(o instanceof ContributionJPAEntity other))
             return false;
 
-        return id != null && id.equals(other.getId()) &&
-                setPermissionType != null && setPermissionType.equals(other.getSetPermissionType()) &&
-                groupPermissionType != null && groupPermissionType.equals(other.getGroupPermissionType()) &&
-                contributor != null && contributor.equals(other.getContributor());
+        return contributor != null && contributor.equals(other.getContributor());
     }
 
     @Override

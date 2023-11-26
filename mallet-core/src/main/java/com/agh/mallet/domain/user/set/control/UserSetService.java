@@ -15,8 +15,10 @@ import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.mapper.SetBasicsDTOMapper;
 import com.agh.mallet.infrastructure.utils.NextChunkRebuilder;
 import com.agh.mallet.infrastructure.utils.ObjectIdentifierProvider;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -66,6 +68,7 @@ public class UserSetService {
         add(setEntity, userEntity);
     }
 
+    @Lock(LockModeType.WRITE)
     private void add(SetJPAEntity set, UserJPAEntity user) {
         String identifier = objectIdentifierProvider.fromSetName(set.getName());
 
@@ -93,6 +96,7 @@ public class UserSetService {
     }
 
     @Transactional
+    @Lock(LockModeType.WRITE)
     public Long create(SetCreateDTO setCreateDTO, String userEmail) {
         UserJPAEntity userEntity = userService.getByEmail(userEmail);
         String identifier = objectIdentifierProvider.fromSetName(setCreateDTO.topic());
