@@ -22,7 +22,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.InetAddress;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -68,7 +67,7 @@ public class UserService  {
 
         ConfirmationTokenJPAEntity confirmationToken = confirmationTokenService.save(user);
 
-        String confirmationURL = "https://" +  InetAddress.getLocalHost().getHostAddress() + "/user/registration/confirm?token=" + confirmationToken.getToken();
+        String confirmationURL = "https://mallet.onrender.com" + "/user/registration/confirm?token=" + confirmationToken.getToken();
 
         emailService.sendMail("Mallet account confirmation", email, EmailTemplateProvider.getEmailConfirmationTemplate(confirmationURL));
     }
