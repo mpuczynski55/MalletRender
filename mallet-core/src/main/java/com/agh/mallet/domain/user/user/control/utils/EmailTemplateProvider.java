@@ -78,10 +78,6 @@ public class EmailTemplateProvider {
                 "            <a href=\"" +
                 confirmationLink + "\"" +
                 "class=\"button\">Confirm Email</a>\n" +
-                "        </div>\n" +
-                "        <p style=\"margin-top:30px\"ł>If the button does not work, you can also click the following link:</p>\n" +
-                "        <a href=\"YOUR_CONFIRMATION_LINK\" class=\"alternate-link\">link</a>\n" +
-                "    </div>\n" +
                 "</body>\n" +
                 "</html>\n";
     }
