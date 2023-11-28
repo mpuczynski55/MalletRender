@@ -29,7 +29,7 @@ public class ConfirmationTokenService {
                 .toString();
         LocalDateTime createdAt = LocalDateTime.now();
 
-        ConfirmationTokenJPAEntity tokenEntity = new ConfirmationTokenJPAEntity(token, createdAt, createdAt.plusMinutes(30), user);
+        ConfirmationTokenJPAEntity tokenEntity = new ConfirmationTokenJPAEntity(token, createdAt, createdAt.plusHours(24), user);
 
         return confirmationTokenRepository.save(tokenEntity);
     }
