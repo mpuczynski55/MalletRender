@@ -19,10 +19,9 @@ public class UserContributionValidator {
     public static void validateUserSetEditPermission(String userEmail,
                                                   GroupJPAEntity groupEntity,
                                                   String validationErrorMessage) {
-        UserJPAEntity groupAdmin = groupEntity.getAdmin();
         ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
 
-        if (!groupAdmin.getEmail().equals(userEmail) || PermissionType.READ.equals(requesterContribution.getGroupPermissionType())) {
+        if (PermissionType.READ.equals(requesterContribution.getSetPermissionType())) {
             throw new MalletForbiddenException(validationErrorMessage);
         }
     }
@@ -30,10 +29,9 @@ public class UserContributionValidator {
     public static void validateUserGroupEditPermission(String userEmail,
                                                     GroupJPAEntity groupEntity,
                                                     String validationErrorMessage) {
-        UserJPAEntity groupAdmin = groupEntity.getAdmin();
         ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
 
-        if (!groupAdmin.getEmail().equals(userEmail) || PermissionType.READ.equals(requesterContribution.getGroupPermissionType())) {
+        if (PermissionType.READ.equals(requesterContribution.getGroupPermissionType())) {
             throw new MalletForbiddenException(validationErrorMessage);
         }
     }
