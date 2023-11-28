@@ -1,9 +1,11 @@
 package com.agh.mallet.domain.user.user.boundary;
 
+import com.agh.api.GroupBasicDTO;
 import com.agh.api.UserDTO;
 import com.agh.api.UserDetailDTO;
 import com.agh.api.UserLogInDTO;
 import com.agh.api.UserRegistrationDTO;
+import com.agh.mallet.domain.user.user.control.service.UserGroupService;
 import com.agh.mallet.domain.user.user.control.service.ConfirmationTokenService;
 import com.agh.mallet.domain.user.user.control.service.UserService;
 import com.agh.mallet.domain.user.user.control.utils.EmailTemplateProvider;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -33,12 +36,15 @@ public class UserResource {
     private static final String REGISTRATION_PATH = "/registration";
     private static final String EMAIL_CONFIRMATION_PATH = REGISTRATION_PATH + "/confirm";
     private static final String LOGIN_PATH = "/login";
+    private static final String GROUP_PATH = "/login";
 
     private final UserService userService;
+    private final UserGroupService userGroupService;
     private final ConfirmationTokenService confirmationTokenService;
 
-    public UserResource(UserService userService, ConfirmationTokenService confirmationTokenService) {
+    public UserResource(UserService userService, UserGroupService userGroupService, ConfirmationTokenService confirmationTokenService) {
         this.userService = userService;
+        this.userGroupService = userGroupService;
         this.confirmationTokenService = confirmationTokenService;
     }
 
@@ -90,4 +96,17 @@ public class UserResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get all user's groups",
+            description = "Get all user's groups. If the result exceeds limit param then next chunk uri is returned"
+    )
+    @GetMapping(path = GROUP_PATH)
+    @ResponseBody
+    public ResponseEntity<GroupBasicDTO> get(@RequestParam(name = "startPosition", defaultValue = "0") int startPosition,
+                                             @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                             Principal principal) {
+        GroupBasicDTO groupBasicDTO = userGroupService.get(startPosition, limit, principal.getName());
+
+        return new ResponseEntity<>(groupBasicDTO, HttpStatus.OK);
+    }
 }

@@ -2,6 +2,7 @@ package com.agh.mallet.domain.term.boundary;
 
 import com.agh.api.TermBasicListDTO;
 import com.agh.mallet.domain.term.control.service.TermService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,11 @@ public class TermResource {
         this.termService = termService;
     }
 
-
     @Operation(
             summary = "Get all terms by term name "
     )
     @GetMapping
+    @Hidden
     public ResponseEntity<TermBasicListDTO> get(@RequestParam("term") String term,
                                                 @RequestParam(name = "startPosition", defaultValue = "0") int startPosition,
                                                 @RequestParam(name = "limit", defaultValue = "10") int limit) {

@@ -1,4 +1,4 @@
-package com.agh.mallet.domain.user.group.contorl;
+package com.agh.mallet.domain.user.user.control.service;
 
 import com.agh.api.GroupBasicDTO;
 import com.agh.mallet.domain.group.entity.GroupJPAEntity;

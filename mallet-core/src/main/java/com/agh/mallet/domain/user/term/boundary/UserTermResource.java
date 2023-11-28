@@ -1,6 +1,7 @@
 package com.agh.mallet.domain.user.term.boundary;
 
 import com.agh.mallet.domain.user.term.control.UserTermService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -32,6 +33,7 @@ public class UserTermResource {
     )
     @PutMapping(ADD_PATH)
     @ResponseBody
+    @Hidden
     public void addUserKnownTerms(@RequestBody Set<Long> userKnownTermIds, Principal principal) {
         userTermService.updateKnown(userKnownTermIds,principal.getName());
     }
