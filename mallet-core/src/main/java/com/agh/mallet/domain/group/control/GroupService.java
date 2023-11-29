@@ -257,7 +257,7 @@ public class GroupService {
         Long groupId = groupContributionDeleteDTO.groupId();
         GroupJPAEntity groupEntity = getById(groupId);
 
-        UserContributionValidator.validateUserGroupEditPermission(userEmail, groupEntity, PERMISSION_EDIT_GROUP_ERROR_MSG);
+        UserContributionValidator.validateUserLeaveGroupPermission(userEmail, groupEntity, groupContributionDeleteDTO.contributionsToDeleteIds(), PERMISSION_EDIT_GROUP_ERROR_MSG);
 
         List<ContributionJPAEntity> contributionsToDelete = contributionService.getByIds(groupContributionDeleteDTO.contributionsToDeleteIds());
         Collection<ContributionJPAEntity> groupContributions = groupEntity.getContributions();

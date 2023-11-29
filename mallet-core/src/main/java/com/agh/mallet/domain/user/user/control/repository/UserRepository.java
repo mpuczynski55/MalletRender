@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserJPAEntity, Long>, JpaSpecificationExecutor<UserJPAEntity> {
 
-    Optional<UserJPAEntity> findByEmail(String email);
+    Optional<UserJPAEntity> findByEmailIgnoreCase(String email);
 
     long countAllByUsername(String username);
 

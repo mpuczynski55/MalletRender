@@ -8,7 +8,6 @@ C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\term\control\repository\TermRepository.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\mapper\TermBasicDTOMapper.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\user\control\service\EmailService.java
-C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\group\contorl\UserGroupService.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\mapper\ErrorResponseDTOMapper.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\group\control\GroupService.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\mapper\GroupBasicDTOMapper.java
@@ -22,7 +21,6 @@ C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\set\control\repository\SetRepository.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\exception\MalletIllegalArgumentException.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\set\control\UserSetService.java
-C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\group\boundary\UserGroupResource.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\mapper\ContributionDTOMapper.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\user\control\utils\EmailTemplateProvider.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\common\ExceptionController.java
@@ -38,6 +36,7 @@ C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\set\boundary\SetResource.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\utils\ObjectIdentifierProvider.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\group\entity\ContributionJPAEntity.java
+C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\user\control\service\UserGroupService.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\infrastructure\utils\NextChunkRebuilder.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\group\boundary\GroupResource.java
 C:\Users\Michał\IdeaProjects\MALLetAPI\mallet-core\src\main\java\com\agh\mallet\domain\user\user\control\exception\MalletTokenException.java

@@ -7,18 +7,20 @@ import com.agh.mallet.domain.user.user.entity.UserJPAEntity;
 import com.agh.mallet.infrastructure.exception.MalletForbiddenException;
 
 import java.text.MessageFormat;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class UserContributionValidator {
 
-    private UserContributionValidator() {}
+    private UserContributionValidator() {
+    }
 
     private static final String USER_NOT_FOUND_IN_CONTRIBUTORS_EXCEPTION_MSG = "User was not found in contributions of group with id {0}";
 
 
     public static void validateUserSetEditPermission(String userEmail,
-                                                  GroupJPAEntity groupEntity,
-                                                  String validationErrorMessage) {
+                                                     GroupJPAEntity groupEntity,
+                                                     String validationErrorMessage) {
         ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
 
         if (PermissionType.READ.equals(requesterContribution.getSetPermissionType())) {
@@ -26,9 +28,20 @@ public class UserContributionValidator {
         }
     }
 
+    public static void validateUserLeaveGroupPermission(String userEmail,
+                                                        GroupJPAEntity groupEntity,
+                                                        Set<Long> contributionIdsToDelete,
+                                                        String validationErrorMessage) {
+        ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
+
+        if (PermissionType.READ.equals(requesterContribution.getGroupPermissionType()) && !contributionIdsToDelete.contains(requesterContribution.getId())) {
+            throw new MalletForbiddenException(validationErrorMessage);
+        }
+    }
+
     public static void validateUserGroupEditPermission(String userEmail,
-                                                    GroupJPAEntity groupEntity,
-                                                    String validationErrorMessage) {
+                                                       GroupJPAEntity groupEntity,
+                                                       String validationErrorMessage) {
         ContributionJPAEntity requesterContribution = getContribution(userEmail, groupEntity);
 
         if (PermissionType.READ.equals(requesterContribution.getGroupPermissionType())) {

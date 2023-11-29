@@ -18,6 +18,7 @@ com\agh\mallet\infrastructure\mapper\GroupBasicInformationDTOMapper.class
 com\agh\mallet\infrastructure\utils\ObjectIdentifierProvider.class
 com\agh\mallet\configuration\PasswordEncoder.class
 com\agh\mallet\infrastructure\mapper\TermDTOMapper.class
+com\agh\mallet\domain\user\user\control\service\UserGroupService.class
 com\agh\mallet\domain\user\user\control\service\UserService.class
 com\agh\mallet\domain\set\control\service\SetService.class
 com\agh\mallet\domain\user\user\boundary\UserResource.class
@@ -58,8 +59,6 @@ com\agh\mallet\domain\group\control\ContributionService.class
 com\agh\mallet\infrastructure\mapper\SetDetailDTOMapper.class
 com\agh\mallet\infrastructure\exception\MalletException$1.class
 com\agh\mallet\infrastructure\mapper\GroupDTOMapper.class
-com\agh\mallet\domain\user\group\boundary\UserGroupResource.class
 com\agh\mallet\domain\term\control\service\TermService.class
-com\agh\mallet\domain\user\group\contorl\UserGroupService.class
 com\agh\mallet\infrastructure\mapper\PermissionTypeMapper.class
 com\agh\mallet\domain\user\term\boundary\UserTermResource.class

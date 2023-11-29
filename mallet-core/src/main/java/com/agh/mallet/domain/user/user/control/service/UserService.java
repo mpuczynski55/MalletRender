@@ -59,7 +59,7 @@ public class UserService  {
         String email = userInfo.email();
         userValidator.validateEmail(email);
 
-        Optional<UserJPAEntity> userJPAEntity = userRepository.findByEmail(email);
+        Optional<UserJPAEntity> userJPAEntity = userRepository.findByEmailIgnoreCase(email);
         userJPAEntity.ifPresent(throwUserAlreadyExistsException());
 
         UserJPAEntity user = mapToUserEntity(userInfo);
@@ -109,7 +109,7 @@ public class UserService  {
     }
 
     public UserJPAEntity getByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(throwUserNotFoundException(email));
     }
 

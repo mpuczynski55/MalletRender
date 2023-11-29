@@ -36,7 +36,7 @@ public class UserResource {
     private static final String REGISTRATION_PATH = "/registration";
     private static final String EMAIL_CONFIRMATION_PATH = REGISTRATION_PATH + "/confirm";
     private static final String LOGIN_PATH = "/login";
-    private static final String GROUP_PATH = "/login";
+    private static final String GROUP_PATH = "/group";
 
     private final UserService userService;
     private final UserGroupService userGroupService;
