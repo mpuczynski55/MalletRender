@@ -90,9 +90,9 @@ public class UserSetService {
 
     private void remove(SetJPAEntity set,
                         UserJPAEntity user) {
+        termRepository.deleteAll(set.getTerms());
         user.removeUserSet(set);
         userService.save(user);
-        termRepository.deleteAll(set.getTerms());
     }
 
     @Transactional
