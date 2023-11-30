@@ -51,6 +51,13 @@ public class SetJPAEntity {
 
     public SetJPAEntity() {}
 
+    public SetJPAEntity(String identifier, SetJPAEntity setJPAEntity) {
+        this.name = setJPAEntity.getName();
+        this.identifier = identifier;
+        this.description = setJPAEntity.getDescription();
+        terms.addAll(setJPAEntity.getTerms());
+    }
+
     public SetJPAEntity(SetJPAEntity setJPAEntity, String identifier) {
         this.name = setJPAEntity.getName();
         this.identifier = identifier;

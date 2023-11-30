@@ -276,7 +276,7 @@ public class GroupService {
         SetJPAEntity setToClone = setService.getById(groupSetDTO.setId());
         String identifier = objectIdentifierProvider.fromSetName(setToClone.getName());
 
-        SetJPAEntity clonedSet = new SetJPAEntity(setToClone, identifier);
+        SetJPAEntity clonedSet = new SetJPAEntity(identifier, setToClone);
         groupEntity.addSet(clonedSet);
 
         groupRepository.save(groupEntity);
