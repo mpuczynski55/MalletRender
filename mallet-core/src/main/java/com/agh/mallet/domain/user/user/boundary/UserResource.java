@@ -77,7 +77,7 @@ public class UserResource {
     }
 
     @Operation(
-            summary = "Get users providing username"
+            summary = "Delete user providing username"
     )
     @GetMapping
     public ResponseEntity<List<UserDTO>> get(@RequestParam("username") String username) {
