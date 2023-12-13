@@ -27,7 +27,7 @@ public class GroupJPAEntity {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "IDENTIFIER", nullable = false)
+    @Column(name = "IDENTIFIER", nullable = false, unique = true)
     private String identifier;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)

@@ -7,4 +7,6 @@ public interface GroupRepository extends JpaRepository<GroupJPAEntity, Long> {
 
     long countAllByName(String name);
 
+    boolean existsByIdentifier(String identifier);
+
 }

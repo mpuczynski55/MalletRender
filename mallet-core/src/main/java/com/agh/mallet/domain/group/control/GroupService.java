@@ -115,13 +115,6 @@ public class GroupService {
                 .collect(Collectors.toSet());
     }
 
-    private List<Long> extractContributorIds(List<ContributionDTO> contributions) {
-        return contributions.stream()
-                .map(ContributionDTO::contributor)
-                .map(UserDTO::id)
-                .toList();
-    }
-
     private ContributionJPAEntity getCreatorContribution(UserJPAEntity creator) {
         return new ContributionJPAEntity(PermissionType.ADMIN, PermissionType.ADMIN, creator);
     }

@@ -28,4 +28,6 @@ public interface UserRepository extends JpaRepository<UserJPAEntity, Long>, JpaS
     @Query("SELECT DISTINCT g FROM GroupJPAEntity g JOIN g.contributions c JOIN c.contributor u WHERE u.email = ?1")
     Page<GroupJPAEntity> findAllGroupsByUserEmail(String email, Pageable pageable);
 
+    boolean existsByIdentifier(String identifier);
+
 }

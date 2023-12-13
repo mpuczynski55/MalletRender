@@ -30,7 +30,7 @@ public class SetJPAEntity {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "IDENTIFIER", nullable = false)
+    @Column(name = "IDENTIFIER", nullable = false, unique = true)
     private String identifier;
 
     @Column(name = "DESCRIPTION")

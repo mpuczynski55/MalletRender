@@ -22,19 +22,31 @@ public class ObjectIdentifierProvider {
     public String fromUsername(String username){
         long userCount = userRepository.countAllByUsername(username);
 
-        return trimWhitespaces(username + HASHTAG + userCount);
+        String identifier = trimWhitespaces(username + HASHTAG + userCount);
+        if (userRepository.existsByIdentifier(identifier)) {
+            return trimWhitespaces(username + HASHTAG + userCount + 1);
+        }
+        return identifier;
     }
 
-    public String fromGroupName(String groupName){
+    public String fromGroupName(String groupName) {
         long userCount = groupRepository.countAllByName(groupName);
 
-        return trimWhitespaces(groupName + HASHTAG + userCount);
+        String identifier = trimWhitespaces(groupName + HASHTAG + userCount);
+        if (groupRepository.existsByIdentifier(identifier)) {
+            return trimWhitespaces(groupName + HASHTAG + userCount + 1);
+        }
+        return identifier;
     }
 
     public String fromSetName(String setName) {
         long userCount = setRepository.countAllByName(setName);
 
-        return trimWhitespaces(setName + HASHTAG + userCount);
+        String identifier = trimWhitespaces(setName + HASHTAG + userCount);
+        if (setRepository.existsByIdentifier(identifier)) {
+            return trimWhitespaces(setName + HASHTAG + userCount + 1);
+        }
+        return identifier;
     }
 
     private String trimWhitespaces(String value) {

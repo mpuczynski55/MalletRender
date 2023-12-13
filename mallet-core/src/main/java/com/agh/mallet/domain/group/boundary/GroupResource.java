@@ -8,6 +8,7 @@ import com.agh.api.GroupSetDTO;
 import com.agh.api.GroupUpdateAdminDTO;
 import com.agh.api.GroupUpdateDTO;
 import com.agh.mallet.domain.group.control.GroupService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -98,6 +99,7 @@ public class GroupResource {
             description = "Update group admin. Only admin (owner) of the group can perform this operation"
     )
     @PutMapping(path = "/admin")
+    @Hidden
     public ResponseEntity<Object> updateGroupAdmin(@RequestBody GroupUpdateAdminDTO groupUpdateAdminDTO, Principal principal) {
         groupService.updateAdmin(groupUpdateAdminDTO, principal.getName());
 

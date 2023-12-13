@@ -31,7 +31,7 @@ public class UserJPAEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "IDENTIFIER")
+    @Column(name = "IDENTIFIER", nullable = false, unique = true)
     private String identifier;
 
     @Column(name = "USERNAME", nullable = false)

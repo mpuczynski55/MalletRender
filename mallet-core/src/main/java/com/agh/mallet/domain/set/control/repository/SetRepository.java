@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SetRepository extends JpaRepository<SetJPAEntity, Long>, JpaSpecificationExecutor<SetJPAEntity> {
 
@@ -22,6 +23,8 @@ public interface SetRepository extends JpaRepository<SetJPAEntity, Long>, JpaSpe
     List<SetJPAEntity> findAllByNameContainingIgnoreCase(String topic);
 
     long countAllByName(String name);
+
+    boolean existsByIdentifier(String identifier);
 
     @Query("SELECT o FROM SetJPAEntity o where o.isPredefined = true")
     Page<SetJPAEntity> findAllPredefined(Pageable pageable);
