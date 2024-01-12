@@ -67,7 +67,7 @@ public class UserService  {
 
         ConfirmationTokenJPAEntity confirmationToken = confirmationTokenService.save(user);
 
-        String confirmationURL = "https://mallet.onrender.com" + "/user/registration/confirm?token=" + confirmationToken.getToken();
+        String confirmationURL = "https://malletapp.onrender.com" + "/user/registration/confirm?token=" + confirmationToken.getToken();
 
         emailService.sendMail("Mallet account confirmation", email, EmailTemplateProvider.getEmailConfirmationTemplate(confirmationURL));
     }
