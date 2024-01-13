@@ -47,4 +47,8 @@ public class ConfirmationTokenService {
 
     }
 
+    public void deleteAllByUser(UserJPAEntity user) {
+        confirmationTokenRepository.deleteAllByUser(user);
+    }
+
 }

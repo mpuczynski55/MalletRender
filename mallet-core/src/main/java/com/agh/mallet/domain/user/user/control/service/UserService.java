@@ -145,6 +145,7 @@ public class UserService  {
         }
 
         contributionRepository.deleteAllByContributor(user);
+        confirmationTokenService.deleteAllByUser(user);
         userRepository.delete(user);
     }
 }
